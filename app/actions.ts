@@ -135,7 +135,7 @@ export async function shareChat(chat: Chat) {
   })
   await supabase
     .from('chats')
-    .update({ payload: payload as any })
+  .update<Database['public']['Tables']['chats']['Update']>({ payload: payload as any })
     .eq('id', chat.id)
     .throwOnError()
 
