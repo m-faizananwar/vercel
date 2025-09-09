@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Premium Apple-inspired color palette */
+    --background: 0 0% 98%;
+    --foreground: 214 13% 20%;
+
+    --muted: 220 10% 96%;
+    --muted-foreground: 220 8% 52%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 214 13% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 214 13% 20%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+
+    /* Blue accent inspired by Apple's design */
+    --primary: 214 100% 59%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 10% 96%;
+    --secondary-foreground: 214 13% 20%;
+
+    --accent: 214 100% 97%;
+    --accent-foreground: 214 100% 47%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --ring: 214 100% 59%;
+
+    /* Enhanced radius for Apple-like feel */
+    --radius: 0.75rem;
+
+    /* Chat-specific variables */
+    --chat-bubble-user: 214 100% 59%;
+    --chat-bubble-user-foreground: 0 0% 100%;
+    --chat-bubble-assistant: 0 0% 100%;
+    --chat-bubble-assistant-foreground: 214 13% 20%;
+    --chat-bubble-shadow: 0 0% 0% / 0.1;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215 20% 65%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 213 31% 91%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --primary: 214 100% 59%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 84% 5%;
+    --secondary-foreground: 213 31% 91%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 214 100% 75%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 213 31% 91%;
+
+    --ring: 214 100% 59%;
+
+    /* Dark mode chat bubbles */
+    --chat-bubble-user: 214 100% 59%;
+    --chat-bubble-user-foreground: 0 0% 100%;
+    --chat-bubble-assistant: 216 34% 17%;
+    --chat-bubble-assistant-foreground: 213 31% 91%;
+    --chat-bubble-shadow: 0 0% 0% / 0.3;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-medium;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer components {
+  /* Premium chat bubble styles */
+  .chat-bubble {
+    @apply rounded-2xl px-4 py-2.5 max-w-[80%] shadow-sm relative;
+    transform: translateZ(0);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .chat-bubble-user {
+    @apply bg-[hsl(var(--chat-bubble-user))] text-[hsl(var(--chat-bubble-user-foreground))];
+    box-shadow: 0 1px 2px hsl(var(--chat-bubble-shadow));
+  }
+  
+  .chat-bubble-assistant {
+    @apply bg-[hsl(var(--chat-bubble-assistant))] text-[hsl(var(--chat-bubble-assistant-foreground))] border border-border/50;
+    box-shadow: 0 1px 2px hsl(var(--chat-bubble-shadow));
+  }
+
+  /* Premium input styling */
+  .premium-input {
+    @apply bg-background/80 backdrop-blur-sm border-border/50 rounded-2xl;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px hsl(var(--chat-bubble-shadow));
+  }
+  
+  .premium-input:focus-within {
+    @apply border-primary/50 shadow-lg;
+    box-shadow: 0 4px 12px hsl(var(--chat-bubble-shadow)), 0 0 0 1px hsl(var(--primary) / 0.2);
+  }
+
+  /* Smooth animations */
+  .slide-up {
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
