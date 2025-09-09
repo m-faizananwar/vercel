@@ -26,9 +26,10 @@ export async function getChats(userId?: string | null, teamId?: string | null) {
         .select('payload')
         .eq('team_id', teamId)
         .order('payload->createdAt', { ascending: false })
+        .returns<{ payload: Chat | null }[]>()
         .throwOnError()
 
-      return (data?.map(entry => entry.payload) as Chat[]) ?? []
+      return (data?.map((entry) => entry.payload!).filter(Boolean) as Chat[]) ?? []
     } catch (error) {
       return []
     }
@@ -47,7 +48,8 @@ export async function getChat(id: string) {
       .eq('id', id)
       .maybeSingle()
 
-    return (data?.payload as Chat) ?? null
+    const payload = (data as { payload: Chat } | null)?.payload
+    return payload ?? null
   })
 }
 
@@ -70,8 +72,9 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
     // Invalidate cache for this chat and its team's chat list
     cache.invalidateChatContent(id)
     
-    if (chatData?.payload && (chatData.payload as any).teamId) {
-      cache.invalidateChats((chatData.payload as any).teamId)
+    const chatPayload = (chatData as { payload: Chat } | null)?.payload
+    if (chatPayload?.teamId) {
+      cache.invalidateChats(chatPayload.teamId)
     }
 
     revalidatePath('/')
@@ -116,7 +119,8 @@ export async function getSharedChat(id: string) {
     .not('payload->sharePath', 'is', null)
     .maybeSingle()
 
-  return (data?.payload as Chat) ?? null
+  const payload = (data as { payload: Chat } | null)?.payload
+  return payload ?? null
 }
 
 export async function shareChat(chat: Chat) {
