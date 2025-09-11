@@ -24,13 +24,34 @@ function removeCookie(name: string) {
 }
 
 export function getSupabaseBrowser(): SupabaseClient<Database> {
-  if (client) return client
+  if (client) {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+      console.debug('[Supabase] Reusing browser client')
+    }
+    return client
+  }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY')
+  }
+
+  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    const mask = (value: string) => {
+      if (!value) return '""'
+      const start = value.slice(0, 6)
+      const end = value.slice(-4)
+      const maskedMiddle = '*'.repeat(Math.max(0, value.length - 10))
+      return `${start}${maskedMiddle}${end}`
+    }
+    console.info('[Supabase] Public env loaded', {
+      NEXT_PUBLIC_SUPABASE_URL: supabaseUrl,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: mask(supabaseAnonKey),
+      NODE_ENV: process.env.NODE_ENV
+    })
+    console.debug('[Supabase] Creating new browser client')
   }
 
   client = createClient<Database>(supabaseUrl, supabaseAnonKey, {
