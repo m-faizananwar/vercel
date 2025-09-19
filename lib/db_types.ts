@@ -55,16 +55,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "chats_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "local_users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'chats_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'local_users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "chats_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'chats_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -98,10 +98,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "teams_created_by_fkey"
-            columns: ["created_by"]
-            referencedRelation: "local_users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'teams_created_by_fkey'
+            columns: ['created_by']
+            referencedRelation: 'local_users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -129,16 +129,16 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "team_members_team_id_fkey"
-            columns: ["team_id"]
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_members_team_id_fkey'
+            columns: ['team_id']
+            referencedRelation: 'teams'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "team_members_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "local_users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'team_members_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'local_users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -163,20 +163,19 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "super_admins_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "local_users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'super_admins_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'local_users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "super_admins_created_by_fkey"
-            columns: ["created_by"]
-            referencedRelation: "local_users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'super_admins_created_by_fkey'
+            columns: ['created_by']
+            referencedRelation: 'local_users'
+            referencedColumns: ['id']
           }
         ]
       }
-
     }
     Views: {
       [_ in never]: never
@@ -254,10 +253,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "buckets_owner_fkey"
-            columns: ["owner"]
-            referencedRelation: "local_users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'buckets_owner_fkey'
+            columns: ['owner']
+            referencedRelation: 'local_users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -321,10 +320,10 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "objects_bucketId_fkey"
-            columns: ["bucket_id"]
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
+            foreignKeyName: 'objects_bucketId_fkey'
+            columns: ['bucket_id']
+            referencedRelation: 'buckets'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -396,4 +395,3 @@ export interface Database {
     }
   }
 }
-

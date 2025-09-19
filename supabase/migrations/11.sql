@@ -1,6 +1,3 @@
--- Fix duplicate users in get_all_users_with_teams function
--- This removes duplicate users and properly handles users that exist in both tables
-
 create or replace function public.get_all_users_with_teams()
 returns table (
     user_id uuid,
@@ -13,9 +10,7 @@ returns table (
 language sql
 security definer
 as $$
-    -- Get all users from both tables, then deduplicate by email
     with all_users as (
-        -- Get users from auth.users
         select
             u.id as user_id,
             u.email,
@@ -40,7 +35,6 @@ as $$
 
         UNION ALL
 
-        -- Get users from local_users
         select
             lu.id as user_id,
             lu.email,
@@ -64,7 +58,6 @@ as $$
         ) chat_stats on chat_stats.user_id = lu.id
     ),
     deduplicated_users as (
-        -- Remove duplicates by email, keeping the most recent entry
         select distinct on (lower(email))
             user_id,
             email,

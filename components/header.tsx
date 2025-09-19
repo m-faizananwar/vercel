@@ -1,4 +1,3 @@
-
 import Link from 'next/link'
 
 import { cn } from '@/lib/utils'
@@ -26,16 +25,15 @@ import { TeamSelector } from '@/components/team-selector'
 
 export async function Header() {
   const cookieStore = cookies()
-  // Use fast auth first, fallback to regular auth
-  const session = await authFast({ cookieStore }) || await auth({ cookieStore })
+  const session =
+    (await authFast({ cookieStore })) || (await auth({ cookieStore }))
   const userId = session?.user?.id
 
-  // Pass session to avoid redundant auth call in isSuperAdmin
   const isUserSuperAdmin = userId ? await isSuperAdmin(userId, session) : false
   const teams = userId ? await getUserTeams(userId) : []
-  
+
   return (
-  <header className="fixed inset-x-0 top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b border-border/50 bg-background/80 px-6 shadow-md backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
+    <header className="fixed inset-x-0 top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b border-border/50 bg-background/80 px-6 shadow-md backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
       <div className="flex items-center">
         {session?.user ? (
           <Sidebar
@@ -45,15 +43,19 @@ export async function Header() {
                 <div className="flex items-center space-x-2">
                   <ThemeToggle />
                 </div>
-
               </SidebarFooter>
             }
           >
             <div className="flex-1 overflow-auto">
-              {/* Teams Section */}
+              {}
               <div className="px-4 py-3">
-                <h3 className="mb-2 text-sm font-medium text-foreground/80">Чаты команды</h3>
-                <SidebarTeams session={session} isSuperAdmin={isUserSuperAdmin} />
+                <h3 className="mb-2 text-sm font-medium text-foreground/80">
+                  Чаты команды
+                </h3>
+                <SidebarTeams
+                  session={session}
+                  isSuperAdmin={isUserSuperAdmin}
+                />
               </div>
             </div>
           </Sidebar>
@@ -87,10 +89,10 @@ export async function Header() {
               </Button>
             </TeamSelectorDialog>
             {isUserSuperAdmin && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-9 w-9 rounded-full bg-yellow-500/10 transition-all duration-200 hover:scale-105 hover:bg-yellow-500/20 active:scale-95" 
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full bg-yellow-500/10 transition-all duration-200 hover:scale-105 hover:bg-yellow-500/20 active:scale-95"
                 asChild
                 title="Super Admin Dashboard"
               >

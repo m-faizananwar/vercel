@@ -27,12 +27,11 @@ class SimpleCache {
     chats: {},
     chatContent: {}
   }
-  
-  private readonly CACHE_DURATION = 5 * 24 * 60 * 60 * 1000 // 5 days in milliseconds
+
+  private readonly CACHE_DURATION = 5 * 24 * 60 * 60 * 1000
   private readonly CLIENT_STORAGE_KEY = 'ai_chat_cache'
 
   constructor() {
-    // Load from localStorage if available (client-side)
     if (typeof window !== 'undefined') {
       this.loadFromStorage()
     }
@@ -52,16 +51,17 @@ class SimpleCache {
         }
       }
     } catch (error) {
-      console.warn('Failed to load cache from localStorage:', error)
     }
   }
 
   private saveToStorage(): void {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem(this.CLIENT_STORAGE_KEY, JSON.stringify(this.cache))
+        localStorage.setItem(
+          this.CLIENT_STORAGE_KEY,
+          JSON.stringify(this.cache)
+        )
       } catch (error) {
-        console.warn('Failed to save cache to localStorage:', error)
       }
     }
   }
@@ -70,7 +70,6 @@ class SimpleCache {
     return Date.now() - timestamp > this.CACHE_DURATION
   }
 
-  // Teams cache
   setTeams(userId: string, teams: TeamWithMembers[]): void {
     this.cache.teams[userId] = {
       data: teams,
@@ -96,7 +95,6 @@ class SimpleCache {
     this.saveToStorage()
   }
 
-  // Chats cache
   setChats(teamId: string, chats: Chat[]): void {
     this.cache.chats[teamId] = {
       data: chats,
@@ -122,7 +120,6 @@ class SimpleCache {
     this.saveToStorage()
   }
 
-  // Chat content cache
   setChatContent(chatId: string, chat: Chat | null): void {
     this.cache.chatContent[chatId] = {
       data: chat,
@@ -138,7 +135,7 @@ class SimpleCache {
         delete this.cache.chatContent[chatId]
         this.saveToStorage()
       }
-      return undefined // undefined means not cached, null means cached as null
+      return undefined
     }
     return cached.data
   }
@@ -148,7 +145,6 @@ class SimpleCache {
     this.saveToStorage()
   }
 
-  // Clear all cache
   clearAll(): void {
     this.cache = {
       teams: {},
@@ -159,19 +155,17 @@ class SimpleCache {
   }
 }
 
-// Create a singleton instance
 export const cache = new SimpleCache()
 
-// Utility functions for common operations
 export function getCachedTeamsOrFetch(
-  userId: string, 
+  userId: string,
   fetchFn: () => Promise<TeamWithMembers[]>
 ): Promise<TeamWithMembers[]> {
   const cached = cache.getTeams(userId)
   if (cached) {
     return Promise.resolve(cached)
   }
-  
+
   return fetchFn().then(data => {
     cache.setTeams(userId, data)
     return data
@@ -186,7 +180,7 @@ export function getCachedChatsOrFetch(
   if (cached) {
     return Promise.resolve(cached)
   }
-  
+
   return fetchFn().then(data => {
     cache.setChats(teamId, data)
     return data
@@ -201,20 +195,24 @@ export function getCachedChatContentOrFetch(
   if (cached !== undefined) {
     return Promise.resolve(cached)
   }
-  
+
   return fetchFn().then(data => {
     cache.setChatContent(chatId, data)
     return data
   })
 }
 
-// Client-side only functions for components
-export function getCachedChatContentClient(chatId: string): Chat | null | undefined {
+export function getCachedChatContentClient(
+  chatId: string
+): Chat | null | undefined {
   if (typeof window === 'undefined') return undefined
   return cache.getChatContent(chatId)
 }
 
-export function setCachedChatContentClient(chatId: string, chat: Chat | null): void {
+export function setCachedChatContentClient(
+  chatId: string,
+  chat: Chat | null
+): void {
   if (typeof window === 'undefined') return
   cache.setChatContent(chatId, chat)
-} 
+}

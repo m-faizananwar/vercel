@@ -47,15 +47,24 @@ export function ChatPanel({
   selectedTeamId,
   onTeamChange
 }: ChatPanelProps) {
-  // Helper to classify any non-image file we want treated as opaque doc (no parsing)
   const isDocumentFile = (att: any) => {
     if (!att) return false
     const name = (att.name || '').toLowerCase()
     const type = (att.type || '').toLowerCase()
-    const docExt = /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|csv|json|txt|md|markdown|tsv|xml|yaml|yml)$/i
+    const docExt =
+      /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|csv|json|txt|md|markdown|tsv|xml|yaml|yml)$/i
     if (docExt.test(name)) return true
-    if (type.startsWith('application/') && !type.startsWith('application/json+')) return true
-    if (type === 'text/plain' || type === 'text/markdown' || type === 'text/csv') return true
+    if (
+      type.startsWith('application/') &&
+      !type.startsWith('application/json+')
+    )
+      return true
+    if (
+      type === 'text/plain' ||
+      type === 'text/markdown' ||
+      type === 'text/csv'
+    )
+      return true
     return false
   }
 
@@ -63,16 +72,16 @@ export function ChatPanel({
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-transparent via-background/80 to-background backdrop-blur-xl">
       <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-2xl sm:px-4">
-        {/* Action buttons */}
+        {}
         <div className="mb-2 flex h-12 items-center justify-center">
           {isLoading ? (
             <Button
               variant="outline"
               onClick={() => stop()}
               className={cn(
-                "border-border/50 bg-background/80 backdrop-blur-sm hover:bg-background/90",
-                "transition-all duration-200 hover:scale-105 active:scale-95",
-                "shadow-sm hover:shadow-md"
+                'border-border/50 bg-background/80 backdrop-blur-sm hover:bg-background/90',
+                'transition-all duration-200 hover:scale-105 active:scale-95',
+                'shadow-sm hover:shadow-md'
               )}
             >
               <IconStop className="mr-2 h-4 w-4" />
@@ -84,9 +93,9 @@ export function ChatPanel({
                 variant="outline"
                 onClick={() => reload()}
                 className={cn(
-                  "border-border/50 bg-background/80 backdrop-blur-sm hover:bg-background/90",
-                  "transition-all duration-200 hover:scale-105 active:scale-95",
-                  "shadow-sm hover:shadow-md"
+                  'border-border/50 bg-background/80 backdrop-blur-sm hover:bg-background/90',
+                  'transition-all duration-200 hover:scale-105 active:scale-95',
+                  'shadow-sm hover:shadow-md'
                 )}
               >
                 <IconRefresh className="mr-2 h-4 w-4" />
@@ -95,44 +104,58 @@ export function ChatPanel({
             )
           )}
         </div>
-        
-        {/* Main panel */}
+
+        {}
         <div className="mx-4 mb-4 sm:mx-0">
           <div className="rounded-2xl border border-border/50 bg-background/95 p-4 shadow-xl backdrop-blur-sm transition-all duration-300 md:py-6">
             <PromptForm
               onSubmit={async (value, attachments) => {
                 if (attachments && attachments.length > 0) {
-                  // Classify attachments
-                  const imageAttachments = attachments.filter(att => att.type.startsWith('image/'))
-                  const documentAttachments = attachments.filter(att => !att.type.startsWith('image/') && isDocumentFile(att))
-                  // Everything else that is not image or document we still keep as document (opaque) to avoid parsing
-                  const otherOpaque = attachments.filter(att => !imageAttachments.includes(att) && !documentAttachments.includes(att))
+                  const imageAttachments = attachments.filter(att =>
+                    att.type.startsWith('image/')
+                  )
+                  const documentAttachments = attachments.filter(
+                    att => !att.type.startsWith('image/') && isDocumentFile(att)
+                  )
+                  const otherOpaque = attachments.filter(
+                    att =>
+                      !imageAttachments.includes(att) &&
+                      !documentAttachments.includes(att)
+                  )
                   documentAttachments.push(...otherOpaque)
 
-                  if (imageAttachments.length > 0 || documentAttachments.length > 0) {
+                  if (
+                    imageAttachments.length > 0 ||
+                    documentAttachments.length > 0
+                  ) {
                     const messageContent: any[] = [
-                      { type: 'text', text: value || 'Пожалуйста, проанализируйте вложение(я).' }
+                      {
+                        type: 'text',
+                        text:
+                          value || 'Пожалуйста, проанализируйте вложение(я).'
+                      }
                     ]
 
-                    // Add all images
-                    imageAttachments.forEach((attachment) => {
+                    imageAttachments.forEach(attachment => {
                       messageContent.push({
                         type: 'image_url',
                         image_url: { url: attachment.content, detail: 'high' }
                       })
                     })
 
-                    // Add all documents as opaque image_url placeholders (same as PDFs previously)
-                    documentAttachments.forEach((attachment) => {
+                    documentAttachments.forEach(attachment => {
                       messageContent.push({
                         type: 'image_url',
                         image_url: { url: attachment.content, detail: 'high' }
                       })
                     })
 
-                    await append({ id, role: 'user', content: messageContent as any })
+                    await append({
+                      id,
+                      role: 'user',
+                      content: messageContent as any
+                    })
                   } else {
-                    // Fallback just sends text.
                     await append({ id, content: value, role: 'user' })
                   }
                 } else {

@@ -13,12 +13,15 @@ import { LayoutWrapper } from '@/components/layout-wrapper'
 import { RouteProgress } from '@/components/route-progress'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  ),
   title: {
     default: 'SAUDAGAR',
     template: `%s - SAUDAGAR`
   },
-  description: 'Collaborate with your team on AI conversations. SAUDAGAR enables shared AI experiences for better collective intelligence.',
+  description:
+    'Collaborate with your team on AI conversations. SAUDAGAR enables shared AI experiences for better collective intelligence.',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
@@ -53,9 +56,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Suspense fallback={null}>
             <RouteProgress />
           </Suspense>
-          <LayoutWrapper 
+          <LayoutWrapper
             header={
-              /* @ts-ignore */
+              
               <Header />
             }
           >

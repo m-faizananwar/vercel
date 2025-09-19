@@ -32,7 +32,8 @@ export function TeamJoinCode({ team }: TeamJoinCodeProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-sm text-muted-foreground">
-          Поделитесь этим кодом с людьми, которых хотите пригласить в свою команду.
+          Поделитесь этим кодом с людьми, которых хотите пригласить в свою
+          команду.
         </div>
         <div className="flex items-center gap-2">
           <div className="flex-1 rounded-md bg-muted p-3 text-center">
@@ -54,7 +55,8 @@ export function TeamJoinCode({ team }: TeamJoinCodeProps) {
           </Button>
         </div>
         <div className="text-xs text-muted-foreground">
-          Люди могут присоединиться, введя этот код в форме &quot;Присоединиться к команде&quot;.
+          Люди могут присоединиться, введя этот код в форме &quot;Присоединиться
+          к команде&quot;.
         </div>
       </CardContent>
     </Card>

@@ -13,7 +13,9 @@ interface TeamChatDetailPageProps {
   }
 }
 
-export default async function TeamChatDetailPage({ params }: TeamChatDetailPageProps) {
+export default async function TeamChatDetailPage({
+  params
+}: TeamChatDetailPageProps) {
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
 
@@ -34,10 +36,10 @@ export default async function TeamChatDetailPage({ params }: TeamChatDetailPageP
   }
 
   return (
-    <Chat 
-      id={chat.id} 
+    <Chat
+      id={chat.id}
       initialMessages={chat.messages}
-      session={session} 
+      session={session}
       teamId={team.id}
       teamName={team.name}
     />

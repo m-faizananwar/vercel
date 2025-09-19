@@ -60,7 +60,9 @@ export function SidebarActions({
 
   const copyShareLink = React.useCallback(async (chat: Chat) => {
     if (!chat.sharePath) {
-      return toast.error('Не удалось скопировать ссылку для совместного использования')
+      return toast.error(
+        'Не удалось скопировать ссылку для совместного использования'
+      )
     }
 
     const url = new URL(window.location.href)
@@ -156,7 +158,11 @@ export function SidebarActions({
 
                   const result = await shareChat(chat)
 
-                  if (result && typeof result === 'object' && 'error' in result) {
+                  if (
+                    result &&
+                    typeof result === 'object' &&
+                    'error' in result
+                  ) {
                     toast.error(result.error)
                     return
                   }
@@ -182,8 +188,8 @@ export function SidebarActions({
           <AlertDialogHeader>
             <AlertDialogTitle>Вы абсолютно уверены?</AlertDialogTitle>
             <AlertDialogDescription>
-              Это навсегда удалит ваше сообщение чата и удалит ваши
-              данные с наших серверов.
+              Это навсегда удалит ваше сообщение чата и удалит ваши данные с
+              наших серверов.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -200,7 +206,11 @@ export function SidebarActions({
                     path: chat.path
                   })
 
-                  if (result && typeof result === 'object' && 'error' in result) {
+                  if (
+                    result &&
+                    typeof result === 'object' &&
+                    'error' in result
+                  ) {
                     toast.error(result.error)
                     return
                   }

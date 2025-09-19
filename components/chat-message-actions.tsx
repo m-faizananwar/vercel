@@ -31,15 +31,15 @@ export function ChatMessageActions({
       )}
       {...props}
     >
-      <Button 
-        variant="ghost" 
+      <Button
+        variant="ghost"
         size="sm"
         onClick={onCopy}
         className={cn(
-          "h-8 rounded-full border border-border/30 bg-muted/50 px-2.5 hover:bg-muted",
-          "transition-all duration-200 hover:scale-105 active:scale-95",
-          "text-xs font-medium",
-          isCopied && "border-primary/20 bg-primary/10 text-primary"
+          'h-8 rounded-full border border-border/30 bg-muted/50 px-2.5 hover:bg-muted',
+          'transition-all duration-200 hover:scale-105 active:scale-95',
+          'text-xs font-medium',
+          isCopied && 'border-primary/20 bg-primary/10 text-primary'
         )}
       >
         {isCopied ? (

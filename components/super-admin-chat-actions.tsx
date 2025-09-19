@@ -16,10 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog'
-import {
-  IconShare,
-  IconTrash
-} from '@/components/ui/icons'
+import { IconShare, IconTrash } from '@/components/ui/icons'
 import Link from 'next/link'
 
 interface SuperAdminChatActionsProps {
@@ -40,7 +37,9 @@ export function SuperAdminChatActions({
 
   const copyShareLink = React.useCallback(async () => {
     if (!shareChatPath) {
-      return toast.error('Не удалось скопировать ссылку для совместного использования')
+      return toast.error(
+        'Не удалось скопировать ссылку для совместного использования'
+      )
     }
 
     const url = new URL(window.location.href)
@@ -104,13 +103,14 @@ export function SuperAdminChatActions({
         </Button>
       </div>
 
-      {/* Delete Confirmation Dialog */}
+      {}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Chat</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this chat? This action cannot be undone and will permanently remove the chat and all its messages.
+              Are you sure you want to delete this chat? This action cannot be
+              undone and will permanently remove the chat and all its messages.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -1,7 +1,3 @@
--- Simple, safe RLS policies that avoid circular dependencies
--- This approach uses row-level filters that don't reference other tables
-
--- Drop all existing problematic policies
 DROP POLICY IF EXISTS "Users can view teams they created" ON "public"."teams";
 DROP POLICY IF EXISTS "Users can view teams they joined" ON "public"."teams";
 DROP POLICY IF EXISTS "Team creators can update teams" ON "public"."teams";
@@ -14,11 +10,9 @@ DROP POLICY IF EXISTS "Users can delete their own memberships" ON "public"."team
 
 DROP POLICY IF EXISTS "Users can access their own chats" ON "public"."chats";
 
--- Temporarily disable RLS to create safe policies
 ALTER TABLE "public"."teams" DISABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."team_members" DISABLE ROW LEVEL SECURITY;
 
--- Create very simple policies for teams
 ALTER TABLE "public"."teams" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow authenticated users to view all teams"
@@ -49,7 +43,6 @@ FOR DELETE
 TO authenticated
 USING (created_by = auth.uid());
 
--- Create very simple policies for team_members
 ALTER TABLE "public"."team_members" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow authenticated users to view all team memberships"
@@ -73,7 +66,6 @@ FOR DELETE
 TO authenticated
 USING (user_id = auth.uid());
 
--- Allow team creators to manage memberships
 CREATE POLICY "Allow team creators to manage team memberships"
 ON "public"."team_members"
 AS PERMISSIVE
@@ -87,7 +79,6 @@ USING (
     )
 );
 
--- Simple policies for chats
 CREATE POLICY "Allow users to access their own chats"
 ON "public"."chats"
 AS PERMISSIVE
@@ -96,7 +87,6 @@ TO authenticated
 USING (user_id = auth.uid())
 WITH CHECK (user_id = auth.uid());
 
--- Allow access to team chats for team members
 CREATE POLICY "Allow team members to access team chats"
 ON "public"."chats"
 AS PERMISSIVE

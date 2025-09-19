@@ -12,7 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import { IconUser } from '@/components/ui/icons'
 import { toast } from 'react-hot-toast'
@@ -57,7 +57,8 @@ export function JoinTeamForm() {
           <DialogHeader>
             <DialogTitle>Присоединиться к команде</DialogTitle>
             <DialogDescription>
-              Введите код присоединения к команде, чтобы стать участником существующей команды.
+              Введите код присоединения к команде, чтобы стать участником
+              существующей команды.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -66,7 +67,7 @@ export function JoinTeamForm() {
               <Input
                 id="joinCode"
                 value={joinCode}
-                onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+                onChange={e => setJoinCode(e.target.value.toUpperCase())}
                 placeholder="ABC123"
                 maxLength={6}
                 className="text-center font-mono"
@@ -78,7 +79,11 @@ export function JoinTeamForm() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               Отмена
             </Button>
             <Button type="submit" disabled={loading || !joinCode.trim()}>

@@ -2,7 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { IconPlus, IconTeam } from '@/components/ui/icons'
 import { Badge } from '@/components/ui/badge'
@@ -14,7 +21,10 @@ interface TeamSelectorDialogProps {
   children: React.ReactNode
 }
 
-export function TeamSelectorDialog({ teams, children }: TeamSelectorDialogProps) {
+export function TeamSelectorDialog({
+  teams,
+  children
+}: TeamSelectorDialogProps) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
@@ -23,10 +33,7 @@ export function TeamSelectorDialog({ teams, children }: TeamSelectorDialogProps)
     router.push(`/teams/${teamId}/chat`)
   }
 
-
-
   if (!teams || teams.length === 0) {
-    // If no teams, redirect to teams page
     return (
       <Button
         variant="ghost"
@@ -41,13 +48,9 @@ export function TeamSelectorDialog({ teams, children }: TeamSelectorDialogProps)
   }
 
   if (teams.length === 1) {
-    // If only one team, show dialog anyway to give user confirmation
-    // or directly navigate - let's change this to always show dialog for consistency
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          {children}
-        </DialogTrigger>
+        <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-background border">
           <DialogHeader>
             <DialogTitle>Создать новый чат</DialogTitle>
@@ -77,28 +80,25 @@ export function TeamSelectorDialog({ teams, children }: TeamSelectorDialogProps)
     )
   }
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-background border">
         <DialogHeader>
           <DialogTitle>Выберите команду для нового чата</DialogTitle>
           <DialogDescription>
-          Выберите, в какой команде вы хотели бы создать новый чат.
+            Выберите, в какой команде вы хотели бы создать новый чат.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-3 mt-4">
-          {teams.map((team) => (
+          {teams.map(team => (
             <Button
               key={team.id}
               variant="outline"
               className={cn(
-                "w-full justify-start h-auto p-4 transition-all duration-200",
-                "hover:scale-[1.02] active:scale-[0.98] hover:shadow-md"
+                'w-full justify-start h-auto p-4 transition-all duration-200',
+                'hover:scale-[1.02] active:scale-[0.98] hover:shadow-md'
               )}
               onClick={() => handleTeamSelect(team.id)}
             >
@@ -110,7 +110,12 @@ export function TeamSelectorDialog({ teams, children }: TeamSelectorDialogProps)
                     {team.description || 'No description'}
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant={team.user_role === 'admin' ? 'default' : 'secondary'} className="text-xs">
+                    <Badge
+                      variant={
+                        team.user_role === 'admin' ? 'default' : 'secondary'
+                      }
+                      className="text-xs"
+                    >
                       {team.user_role === 'admin' ? 'Admin' : 'Member'}
                     </Badge>
                     <span className="text-xs text-muted-foreground">

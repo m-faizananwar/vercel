@@ -40,8 +40,8 @@ export function ClearHistory({ clearChats }: ClearHistoryProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Вы абсолютно уверены?</AlertDialogTitle>
           <AlertDialogDescription>
-            Это навсегда удалит вашу историю чатов и удалит ваши данные
-            с наших серверов.
+            Это навсегда удалит вашу историю чатов и удалит ваши данные с наших
+            серверов.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

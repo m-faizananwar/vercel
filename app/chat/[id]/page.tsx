@@ -53,9 +53,16 @@ export default async function ChatPage({ params }: ChatPageProps) {
   }
 
   if (chat?.teamId !== team.id) {
-    // Block access if chat doesn't belong to this team
     notFound()
   }
 
-  return <Chat id={chat.id} initialMessages={chat.messages} teamId={team.id} teamName={team.name} session={session} />
+  return (
+    <Chat
+      id={chat.id}
+      initialMessages={chat.messages}
+      teamId={team.id}
+      teamName={team.name}
+      session={session}
+    />
+  )
 }

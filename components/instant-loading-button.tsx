@@ -8,7 +8,13 @@ import { IconSpinner } from '@/components/ui/icons'
 interface InstantLoadingButtonProps {
   href: string
   children: React.ReactNode
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+  variant?:
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link'
   size?: 'default' | 'sm' | 'lg' | 'icon'
   className?: string
   prefetch?: boolean

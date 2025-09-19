@@ -9,14 +9,12 @@ export function RouteProgress() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    // Trigger start on path/search change
     setLoading(true)
     setProgress(10)
     const grow = setInterval(() => {
       setProgress(p => (p < 90 ? p + Math.random() * 15 : p))
     }, 120)
 
-    // Simulate network settle delay; in real Next 13 we cannot hook events easily without router.events
     const timeout = setTimeout(() => {
       setProgress(100)
       setTimeout(() => setLoading(false), 180)

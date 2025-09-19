@@ -1,7 +1,13 @@
 import { redirect } from 'next/navigation'
 import { getCurrentUserSuperAdminStatus } from '@/lib/super-admin'
 import { getSuperAdminTeamDetails } from '@/app/super-admin-actions'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
@@ -15,7 +21,6 @@ interface Props {
 }
 
 export default async function SuperAdminTeamDetailPage({ params }: Props) {
-  // Check if user is super admin
   const { user, isSuperAdmin } = await getCurrentUserSuperAdminStatus()
 
   if (!user) {
@@ -26,7 +31,6 @@ export default async function SuperAdminTeamDetailPage({ params }: Props) {
     redirect('/')
   }
 
-  // Get team details
   const teamResult = await getSuperAdminTeamDetails(params.teamId)
 
   if ('error' in teamResult) {
@@ -43,23 +47,23 @@ export default async function SuperAdminTeamDetailPage({ params }: Props) {
 
   return (
     <div className="container mx-auto max-w-5xl px-6 py-8">
-      {/* Header */}
+      {}
       <div className="mb-8">
         <Button asChild variant="ghost" size="sm" className="mb-4">
-          <Link href="/super-admin/teams">
-            ← Back to Teams
-          </Link>
+          <Link href="/super-admin/teams">← Back to Teams</Link>
         </Button>
-        
+
         <div>
-          <h1 className="mb-2 text-3xl font-semibold tracking-tight text-foreground">{team.name}</h1>
+          <h1 className="mb-2 text-3xl font-semibold tracking-tight text-foreground">
+            {team.name}
+          </h1>
           {team.description && (
             <p className="text-muted-foreground">{team.description}</p>
           )}
         </div>
       </div>
 
-      {/* Team Information */}
+      {}
       <Card className="mb-6 border border-border/60">
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Team Information</CardTitle>
@@ -80,7 +84,9 @@ export default async function SuperAdminTeamDetailPage({ params }: Props) {
             </div>
             <div>
               <span className="text-muted-foreground">Created</span>
-              <p className="mt-1">{new Date(team.created_at).toLocaleDateString()}</p>
+              <p className="mt-1">
+                {new Date(team.created_at).toLocaleDateString()}
+              </p>
             </div>
             <div>
               <span className="text-muted-foreground">Created By</span>
@@ -90,7 +96,7 @@ export default async function SuperAdminTeamDetailPage({ params }: Props) {
         </CardContent>
       </Card>
 
-      {/* Team Members */}
+      {}
       <Card className="border border-border/60">
         <CardHeader className="pb-3">
           <CardTitle className="text-base">
@@ -103,24 +109,33 @@ export default async function SuperAdminTeamDetailPage({ params }: Props) {
         <CardContent>
           <div className="space-y-3">
             {members.length > 0 ? (
-              members.map((member) => (
+              members.map(member => (
                 <div
                   key={member.id}
                   className="flex flex-col justify-between rounded-lg border border-border/40 p-3 transition-colors hover:bg-muted/20 md:flex-row md:items-center"
                 >
                   <div className="flex flex-col space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{member.user?.email || member.user_id}</span>
-                      <Badge variant={member.role === 'admin' ? 'default' : 'secondary'} className="text-xs">
+                      <span className="text-sm font-medium">
+                        {member.user?.email || member.user_id}
+                      </span>
+                      <Badge
+                        variant={
+                          member.role === 'admin' ? 'default' : 'secondary'
+                        }
+                        className="text-xs"
+                      >
                         {member.role === 'admin' ? 'Admin' : 'Member'}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      <span>Joined {new Date(member.joined_at).toLocaleDateString()}</span>
+                      <span>
+                        Joined {new Date(member.joined_at).toLocaleDateString()}
+                      </span>
                       <span>ID: {member.user_id}</span>
                     </div>
                   </div>
-                  
+
                   <div className="mt-2 flex items-center gap-2 md:mt-0">
                     <SuperAdminTeamMemberActions
                       teamId={team.id}

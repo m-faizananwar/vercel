@@ -12,13 +12,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { IconChevronUpDown } from '@/components/ui/icons'
 import { toast } from 'react-hot-toast'
@@ -36,12 +36,11 @@ export function TeamSettings({ team }: TeamSettingsProps) {
     setLoading(true)
     try {
       const result = await deleteTeam(team.id)
-      
+
       if (typeof result === 'object' && result !== null && 'error' in result) {
         toast.error(result.error)
       } else {
         toast.success('Команда удалена успешно')
-        // Close the dialog and redirect to teams page
         setDeleteDialogOpen(false)
         router.push('/teams')
       }
@@ -62,7 +61,7 @@ export function TeamSettings({ team }: TeamSettingsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem 
+          <DropdownMenuItem
             onClick={() => setDeleteDialogOpen(true)}
             className="text-destructive"
           >
@@ -76,20 +75,21 @@ export function TeamSettings({ team }: TeamSettingsProps) {
           <DialogHeader>
             <DialogTitle>Удалить команду</DialogTitle>
             <DialogDescription>
-              Вы уверены, что хотите удалить &quot;{team.name}&quot;? Это действие нельзя отменить.
-              Все чаты команды и данные будут окончательно удалены.
+              Вы уверены, что хотите удалить &quot;{team.name}&quot;? Это
+              действие нельзя отменить. Все чаты команды и данные будут
+              окончательно удалены.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setDeleteDialogOpen(false)}
               disabled={loading}
             >
               Отмена
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={handleDeleteTeam}
               disabled={loading}
             >

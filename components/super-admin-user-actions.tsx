@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
@@ -17,10 +17,14 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog'
 
-import { removeSuperAdmin, updateUserPassword, deleteUser } from '@/app/super-admin-actions'
+import {
+  removeSuperAdmin,
+  updateUserPassword,
+  deleteUser
+} from '@/app/super-admin-actions'
 
 import { useRouter } from 'next/navigation'
 
@@ -37,7 +41,8 @@ export function SuperAdminUserActions({
   isSuperAdmin,
   currentUserId
 }: SuperAdminUserActionsProps) {
-  const [showRemoveSuperAdminDialog, setShowRemoveSuperAdminDialog] = React.useState(false)
+  const [showRemoveSuperAdminDialog, setShowRemoveSuperAdminDialog] =
+    React.useState(false)
   const [showDeleteUserDialog, setShowDeleteUserDialog] = React.useState(false)
   const [showPasswordDialog, setShowPasswordDialog] = React.useState(false)
   const [newPassword, setNewPassword] = React.useState('')
@@ -50,14 +55,11 @@ export function SuperAdminUserActions({
       const result = await removeSuperAdmin(userId)
 
       if (result && typeof result === 'object' && 'error' in result) {
-        console.error('Remove super admin error:', result.error)
         alert('Error: ' + result.error)
       } else {
-        console.log('Super admin privileges removed successfully')
         router.refresh()
       }
     } catch (error) {
-      console.error('Failed to remove super admin privileges:', error)
       alert('Failed to remove super admin privileges')
     } finally {
       setIsLoading(false)
@@ -73,16 +75,13 @@ export function SuperAdminUserActions({
       const result = await updateUserPassword(userId, newPassword.trim())
 
       if (result && typeof result === 'object' && 'error' in result) {
-        console.error('Update password error:', result.error)
         alert('Error: ' + result.error)
       } else {
-        console.log('Password updated successfully')
         alert('Password updated successfully!')
         setNewPassword('')
         setShowPasswordDialog(false)
       }
     } catch (error) {
-      console.error('Failed to update password:', error)
       alert('Failed to update password')
     } finally {
       setIsLoading(false)
@@ -95,14 +94,11 @@ export function SuperAdminUserActions({
       const result = await deleteUser(userId)
 
       if (result && typeof result === 'object' && 'error' in result) {
-        console.error('Delete user error:', result.error)
         alert('Error: ' + result.error)
       } else {
-        console.log('User deleted successfully')
         router.refresh()
       }
     } catch (error) {
-      console.error('Failed to delete user:', error)
       alert('Failed to delete user')
     } finally {
       setIsLoading(false)
@@ -120,7 +116,12 @@ export function SuperAdminUserActions({
             •••
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" side="bottom" sideOffset={4} className="min-h-[80px] w-48">
+        <DropdownMenuContent
+          align="end"
+          side="bottom"
+          sideOffset={4}
+          className="min-h-[80px] w-48"
+        >
           <DropdownMenuItem disabled className="text-sm text-muted-foreground">
             {userEmail}
           </DropdownMenuItem>
@@ -162,13 +163,17 @@ export function SuperAdminUserActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog open={showRemoveSuperAdminDialog} onOpenChange={setShowRemoveSuperAdminDialog}>
+      <AlertDialog
+        open={showRemoveSuperAdminDialog}
+        onOpenChange={setShowRemoveSuperAdminDialog}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Remove Super Admin Privileges</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove super admin privileges from {userEmail}? 
-              This action cannot be undone and they will lose access to all super admin features.
+              Are you sure you want to remove super admin privileges from{' '}
+              {userEmail}? This action cannot be undone and they will lose
+              access to all super admin features.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -184,13 +189,17 @@ export function SuperAdminUserActions({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Password Update Dialog */}
-      <AlertDialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+      {}
+      <AlertDialog
+        open={showPasswordDialog}
+        onOpenChange={setShowPasswordDialog}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Update Password</AlertDialogTitle>
             <AlertDialogDescription>
-              Update the password for {userEmail}. The new password must be at least 4 characters long.
+              Update the password for {userEmail}. The new password must be at
+              least 4 characters long.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
@@ -198,7 +207,7 @@ export function SuperAdminUserActions({
               type="password"
               placeholder="Enter new password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={e => setNewPassword(e.target.value)}
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               minLength={4}
               required
@@ -208,7 +217,9 @@ export function SuperAdminUserActions({
             <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleUpdatePassword}
-              disabled={isLoading || !newPassword.trim() || newPassword.length < 4}
+              disabled={
+                isLoading || !newPassword.trim() || newPassword.length < 4
+              }
               className="bg-blue-600 hover:bg-blue-700"
             >
               {isLoading ? 'Updating...' : 'Update Password'}
@@ -217,13 +228,17 @@ export function SuperAdminUserActions({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Delete User Dialog */}
-      <AlertDialog open={showDeleteUserDialog} onOpenChange={setShowDeleteUserDialog}>
+      {}
+      <AlertDialog
+        open={showDeleteUserDialog}
+        onOpenChange={setShowDeleteUserDialog}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete User</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {userEmail}? This action cannot be undone and will:
+              Are you sure you want to delete {userEmail}? This action cannot be
+              undone and will:
               <ul className="mt-2 list-inside list-disc text-sm">
                 <li>Remove the user from all teams</li>
                 <li>Delete all their chat history</li>

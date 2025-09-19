@@ -13,7 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import { IconPlus } from '@/components/ui/icons'
 import { toast } from 'react-hot-toast'
@@ -30,8 +30,11 @@ export function CreateTeamForm() {
 
     setLoading(true)
     try {
-      const result = await createTeam(name.trim(), description.trim() || undefined)
-      
+      const result = await createTeam(
+        name.trim(),
+        description.trim() || undefined
+      )
+
       if ('error' in result) {
         toast.error(result.error)
       } else {
@@ -69,7 +72,7 @@ export function CreateTeamForm() {
               <Input
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 placeholder="Моя отличная команда"
                 required
               />
@@ -79,14 +82,18 @@ export function CreateTeamForm() {
               <Textarea
                 id="description"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={e => setDescription(e.target.value)}
                 placeholder="Для чего эта команда?"
                 rows={3}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               Отмена
             </Button>
             <Button type="submit" disabled={loading || !name.trim()}>

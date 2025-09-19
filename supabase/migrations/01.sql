@@ -1,4 +1,3 @@
--- Create teams table
 create table "public"."teams" (
     "id" uuid not null default gen_random_uuid(),
     "name" text not null,
@@ -14,7 +13,6 @@ CREATE UNIQUE INDEX teams_join_code_unique ON public.teams USING btree (join_cod
 alter table "public"."teams" add constraint "teams_pkey" PRIMARY KEY using index "teams_pkey";
 alter table "public"."teams" add constraint "teams_join_code_unique" UNIQUE using index "teams_join_code_unique";
 
--- Create team_members table
 create table "public"."team_members" (
     "id" uuid not null default gen_random_uuid(),
     "team_id" uuid not null references public.teams(id) on delete cascade,
@@ -29,19 +27,14 @@ CREATE UNIQUE INDEX team_members_team_user_unique ON public.team_members USING b
 alter table "public"."team_members" add constraint "team_members_pkey" PRIMARY KEY using index "team_members_pkey";
 alter table "public"."team_members" add constraint "team_members_team_user_unique" UNIQUE using index "team_members_team_user_unique";
 
--- No team_invitations table needed - using simple join codes instead
 
--- Add team_id to chats table
 alter table "public"."chats" add column "team_id" uuid references public.teams(id) on delete cascade;
 
--- Create index for team chats
 CREATE INDEX chats_team_id_idx ON public.chats USING btree (team_id);
 
--- Enable RLS on new tables
 alter table "public"."teams" enable row level security;
 alter table "public"."team_members" enable row level security;
 
--- RLS Policies for teams table
 create policy "Users can view teams they are members of"
 on "public"."teams"
 as permissive
@@ -85,7 +78,6 @@ using (
     )
 );
 
--- RLS Policies for team_members table
 create policy "Users can view team members of their teams"
 on "public"."team_members"
 as permissive
@@ -117,9 +109,7 @@ for insert
 to authenticated
 with check (auth.uid() = user_id);
 
--- No invitation policies needed
 
--- Update chats RLS policies to include team access
 create policy "Team members can access team chats"
 on "public"."chats"
 as permissive
@@ -138,7 +128,6 @@ with check (
     )
 );
 
--- Function to automatically add team creator as admin
 create or replace function public.add_team_creator_as_admin()
 returns trigger
 language plpgsql
@@ -151,13 +140,11 @@ begin
 end;
 $$;
 
--- Trigger to add team creator as admin
 create trigger add_team_creator_as_admin_trigger
     after insert on public.teams
     for each row
     execute function public.add_team_creator_as_admin();
 
--- Function to generate team join codes
 create or replace function public.generate_join_code()
 returns text
 language plpgsql
@@ -167,13 +154,10 @@ declare
     exists_check boolean;
 begin
     loop
-        -- Generate a 6-character alphanumeric code
         code := upper(substring(encode(gen_random_bytes(4), 'hex') from 1 for 6));
         
-        -- Check if code already exists
         select exists(select 1 from public.teams where join_code = code) into exists_check;
         
-        -- Exit loop if code is unique
         if not exists_check then
             exit;
         end if;
@@ -183,7 +167,6 @@ begin
 end;
 $$;
 
--- Function to set join code on team creation
 create or replace function public.set_team_join_code()
 returns trigger
 language plpgsql
@@ -197,7 +180,7 @@ begin
 end;
 $$;
 
--- Trigger to set join code on team creation
+
 create trigger set_team_join_code_trigger
     before insert on public.teams
     for each row

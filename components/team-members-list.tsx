@@ -10,7 +10,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { IconUser, IconChevronUpDown } from '@/components/ui/icons'
 import { toast } from 'react-hot-toast'
@@ -26,7 +26,7 @@ export function TeamMembersList({ team }: TeamMembersListProps) {
     setLoading(userId)
     try {
       const result = await removeTeamMember(team.id, userId)
-      
+
       if (typeof result === 'object' && result !== null && 'error' in result) {
         toast.error(result.error)
       } else {
@@ -43,7 +43,7 @@ export function TeamMembersList({ team }: TeamMembersListProps) {
     setLoading(userId)
     try {
       const result = await updateTeamMemberRole(team.id, userId, role)
-      
+
       if (typeof result === 'object' && result !== null && 'error' in result) {
         toast.error(result.error)
       } else {
@@ -59,10 +59,12 @@ export function TeamMembersList({ team }: TeamMembersListProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Участники ({team.members.length})</CardTitle>
+        <CardTitle className="text-base">
+          Участники ({team.members.length})
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {team.members.map((member) => (
+        {team.members.map(member => (
           <div key={member.id} className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
@@ -73,21 +75,28 @@ export function TeamMembersList({ team }: TeamMembersListProps) {
                   {member.user?.email || member.user_id}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Присоединился {new Date(member.joined_at).toLocaleDateString()}
+                  Присоединился{' '}
+                  {new Date(member.joined_at).toLocaleDateString()}
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <Badge variant={member.role === 'admin' ? 'default' : 'secondary'}>
-                {member.role === 'admin' ? 'Администратор' : member.role === 'member' ? 'Участник' : member.role}
+              <Badge
+                variant={member.role === 'admin' ? 'default' : 'secondary'}
+              >
+                {member.role === 'admin'
+                  ? 'Администратор'
+                  : member.role === 'member'
+                    ? 'Участник'
+                    : member.role}
               </Badge>
-              
+
               {team.user_role === 'admin' && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
                       disabled={loading === member.user_id}
                     >
@@ -96,19 +105,23 @@ export function TeamMembersList({ team }: TeamMembersListProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     {member.role === 'member' ? (
-                      <DropdownMenuItem 
-                        onClick={() => handleChangeRole(member.user_id, 'admin')}
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleChangeRole(member.user_id, 'admin')
+                        }
                       >
                         Повысить до администратора
                       </DropdownMenuItem>
                     ) : (
-                      <DropdownMenuItem 
-                        onClick={() => handleChangeRole(member.user_id, 'member')}
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleChangeRole(member.user_id, 'member')
+                        }
                       >
                         Понизить до участника
                       </DropdownMenuItem>
                     )}
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleRemoveMember(member.user_id)}
                       className="text-destructive"
                     >
@@ -120,7 +133,7 @@ export function TeamMembersList({ team }: TeamMembersListProps) {
             </div>
           </div>
         ))}
-        
+
         {team.members.length === 0 && (
           <div className="py-4 text-center text-muted-foreground">
             Участники не найдены

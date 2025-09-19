@@ -16,7 +16,6 @@ import { toast } from 'react-hot-toast'
 import { AVAILABLE_MODELS } from './model-selector'
 import { getUserTeams } from '@/app/team-actions'
 
-// Local lightweight team type (user_role may be optional from server action)
 type ChatTeam = {
   id: string
   name: string
@@ -33,7 +32,14 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   teamName?: string
 }
 
-export function Chat({ id, initialMessages, className, session, teamId, teamName }: ChatProps) {
+export function Chat({
+  id,
+  initialMessages,
+  className,
+  session,
+  teamId,
+  teamName
+}: ChatProps) {
   const router = useRouter()
   const [selectedModel, setSelectedModel] = useLocalStorage<string>(
     'ai-model',
@@ -47,16 +53,13 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
   const [isLoadingTeams, setIsLoadingTeams] = useState(true)
   const [isMounted, setIsMounted] = useState(false)
 
-  // Use cached chat if no initial messages provided
   const { chat: cachedChat, loading: chatLoading } = useCachedChat(
     initialMessages ? undefined : id,
     initialMessages
   )
 
-  // Determine which messages to use
   const messagesToUse = initialMessages || cachedChat?.messages || []
 
-  // Fetch user teams on mount
   useEffect(() => {
     const fetchTeams = async () => {
       if (session?.user?.id) {
@@ -70,12 +73,10 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
             user_role: t.user_role || 'member'
           }))
           setTeams(userTeams)
-          // If no team is selected and we have teams, select the first one
           if (!selectedTeamId && userTeams.length > 0) {
             setSelectedTeamId(userTeams[0].id)
           }
         } catch (error) {
-          console.error('Error fetching teams:', error)
         }
       }
       setIsLoadingTeams(false)
@@ -83,8 +84,7 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
     }
 
     fetchTeams()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.user?.id]) // Intentionally excluding selectedTeamId and setSelectedTeamId to prevent infinite loop
+  }, [session?.user?.id])
 
   const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
@@ -99,9 +99,12 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
         if (!response.ok) {
           try {
             const errorData = await response.json()
-            const errorMessage = errorData.error || response.statusText || 'An error occurred'
+            const errorMessage =
+              errorData.error || response.statusText || 'An error occurred'
             if (response.status === 400 && !selectedTeamId && !teamId) {
-              toast.error('Присоединитесь к команде или создайте команду, чтобы начать чат.')
+              toast.error(
+                'Присоединитесь к команде или создайте команду, чтобы начать чат.'
+              )
             } else if (response.status === 402) {
               toast.error('💳 ' + errorMessage, { duration: 8000 })
             } else if (response.status === 429) {
@@ -112,20 +115,21 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
               toast.error(errorMessage, { duration: 5000 })
             }
           } catch (e) {
-            toast.error(`Запрос не выполнен со статусом ${response.status}`, { duration: 5000 })
+            toast.error(`Запрос не выполнен со статусом ${response.status}`, {
+              duration: 5000
+            })
           }
         }
       },
       onError(error) {
-        toast.error('Не удалось отправить сообщение. Пожалуйста, попробуйте еще раз.')
+        toast.error(
+          'Не удалось отправить сообщение. Пожалуйста, попробуйте еще раз.'
+        )
       },
       async onFinish(message) {
-        // Don't automatically navigate - let the user stay on the current page
-        // The chat will work fine on the generic /teams/{teamId}/chat route
       }
     })
 
-  // Update cache when messages change
   useEffect(() => {
     if (id && messages.length > 0) {
       const chatData = cachedChat || {
@@ -136,7 +140,7 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
         path: `/teams/${selectedTeamId || teamId}/chat/${id}`,
         teamId: selectedTeamId || teamId
       }
-      
+
       setCachedChatContentClient(id, {
         ...chatData,
         messages
@@ -150,26 +154,25 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
     setSelectedTeamId(newTeamId)
   }
 
-  // Navigate to team chat when team selection changes (only when mounted and not initial load)
   useEffect(() => {
     if (!isMounted || !selectedTeamId || selectedTeamId === teamId) {
       return
     }
 
-    // Don't navigate if we already fired navigation
     if (navigationFiredRef.current) {
       return
     }
 
-    //   navigationFiredRef.current = true
-    //   router.replace(`/teams/${selectedTeamId}/chat?new=1&v=${Date.now()}`)
-    // }
   }, [selectedTeamId, teamId, router, isMounted])
 
-  // Show loading state when fetching cached chat
   if (!initialMessages && chatLoading) {
     return (
-      <div className={cn('px-4 pb-[200px] pt-6 sm:px-6 md:pt-12 lg:px-8', className)}>
+      <div
+        className={cn(
+          'px-4 pb-[200px] pt-6 sm:px-6 md:pt-12 lg:px-8',
+          className
+        )}
+      >
         <div className="mx-auto max-w-3xl">
           <div className="flex items-center justify-center py-8">
             <div className="text-sm text-muted-foreground">Loading chat...</div>
@@ -181,7 +184,12 @@ export function Chat({ id, initialMessages, className, session, teamId, teamName
 
   return (
     <>
-      <div className={cn('px-4 pb-[200px] pt-6 sm:px-6 md:pt-12 lg:px-8', className)}>
+      <div
+        className={cn(
+          'px-4 pb-[200px] pt-6 sm:px-6 md:pt-12 lg:px-8',
+          className
+        )}
+      >
         <div className="mx-auto max-w-3xl">
           {messages.length ? (
             <>

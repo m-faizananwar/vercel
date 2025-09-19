@@ -42,68 +42,75 @@ interface TeamSidebarClientProps {
   onLoadChats: (userId: string, teamId: string) => Promise<Chat[]>
 }
 
-export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: TeamSidebarClientProps) {
-  const [expandedTeams, setExpandedTeams] = React.useState<Set<string>>(new Set())
-  const [teamsWithChats, setTeamsWithChats] = React.useState<Record<string, TeamWithChats>>(() => {
-    // Initialize teams and immediately check for cached chats
+export function TeamSidebarClient({
+  teams,
+  userId,
+  isSuperAdmin,
+  onLoadChats
+}: TeamSidebarClientProps) {
+  const [expandedTeams, setExpandedTeams] = React.useState<Set<string>>(
+    new Set()
+  )
+  const [teamsWithChats, setTeamsWithChats] = React.useState<
+    Record<string, TeamWithChats>
+  >(() => {
     const teamsToExpand = new Set<string>()
-    
-    const initialTeams = teams.reduce((acc, team) => {
-      // Check if we have cached chats for this team
-      const cachedChats = cache.getChats(team.id)
-      const hasChats = cachedChats && cachedChats.length > 0
-      
-      acc[team.id] = {
-        ...team,
-        chats: cachedChats || [],
-        chatsLoaded: !!cachedChats,
-        chatsLoading: false
-      }
-      
-      // Auto-expand teams that have chats
-      if (hasChats) {
-        teamsToExpand.add(team.id)
-      }
-      
-      return acc
-    }, {} as Record<string, TeamWithChats>)
-    
-    // Set expanded teams after state initialization
+
+    const initialTeams = teams.reduce(
+      (acc, team) => {
+        const cachedChats = cache.getChats(team.id)
+        const hasChats = cachedChats && cachedChats.length > 0
+
+        acc[team.id] = {
+          ...team,
+          chats: cachedChats || [],
+          chatsLoaded: !!cachedChats,
+          chatsLoading: false
+        }
+
+        if (hasChats) {
+          teamsToExpand.add(team.id)
+        }
+
+        return acc
+      },
+      {} as Record<string, TeamWithChats>
+    )
+
     setTimeout(() => {
       setExpandedTeams(teamsToExpand)
     }, 0)
-    
+
     return initialTeams
   })
 
-  // Update teams when prop changes, preserving cached data
   React.useEffect(() => {
     setTeamsWithChats(prev => {
       const updated = { ...prev }
       const teamsToExpand = new Set(expandedTeams)
-      
+
       teams.forEach(team => {
         if (!updated[team.id]) {
-          // New team - check for cached chats
           const cachedChats = cache.getChats(team.id)
           const hasChats = cachedChats && cachedChats.length > 0
-          
+
           updated[team.id] = {
             ...team,
             chats: cachedChats || [],
             chatsLoaded: !!cachedChats,
             chatsLoading: false
           }
-          
-          // Auto-expand if has chats
+
           if (hasChats) {
             teamsToExpand.add(team.id)
           }
         } else {
-          // Existing team - update team info but preserve chat data unless we have newer cached data
           const cachedChats = cache.getChats(team.id)
-          if (cachedChats && (!updated[team.id].chatsLoaded || cachedChats.length !== updated[team.id].chats.length)) {
-            // Update with newer cached data
+          if (
+            cachedChats &&
+            (!updated[team.id].chatsLoaded ||
+              cachedChats.length !== updated[team.id].chats.length)
+          ) {
             updated[team.id] = {
               ...updated[team.id],
               ...team,
@@ -111,13 +118,11 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
               chatsLoaded: true,
               chatsLoading: false
             }
-            
-            // Auto-expand if has chats
+
             if (cachedChats.length > 0) {
               teamsToExpand.add(team.id)
             }
           } else {
-            // Just update team metadata
             updated[team.id] = {
               ...updated[team.id],
               ...team
@@ -125,12 +130,14 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
           }
         }
       })
-      
-      // Update expanded teams if needed
-      if (teamsToExpand.size !== expandedTeams.size || Array.from(teamsToExpand).some(id => !expandedTeams.has(id))) {
+
+      if (
+        teamsToExpand.size !== expandedTeams.size ||
+        Array.from(teamsToExpand).some(id => !expandedTeams.has(id))
+      ) {
         setExpandedTeams(teamsToExpand)
       }
-      
+
       return updated
     })
   }, [teams])
@@ -138,11 +145,10 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
   const toggleTeam = async (teamId: string) => {
     const newExpanded = new Set(expandedTeams)
     const isExpanding = !newExpanded.has(teamId)
-    
+
     if (isExpanding) {
       newExpanded.add(teamId)
-      
-      // Load chats if not already loaded and not in cache
+
       const team = teamsWithChats[teamId]
       if (team && !team.chatsLoaded && !team.chatsLoading) {
         setTeamsWithChats(prev => ({
@@ -154,19 +160,18 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
           const chats = await onLoadChats(userId, teamId)
           setTeamsWithChats(prev => ({
             ...prev,
-            [teamId]: { 
-              ...prev[teamId], 
+            [teamId]: {
+              ...prev[teamId],
               chats: chats || [],
               chatsLoaded: true,
               chatsLoading: false
             }
           }))
         } catch (error) {
-          console.error('Error loading chats for team:', teamId, error)
           setTeamsWithChats(prev => ({
             ...prev,
-            [teamId]: { 
-              ...prev[teamId], 
+            [teamId]: {
+              ...prev[teamId],
               chatsLoading: false
             }
           }))
@@ -175,7 +180,7 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
     } else {
       newExpanded.delete(teamId)
     }
-    
+
     setExpandedTeams(newExpanded)
   }
 
@@ -183,14 +188,14 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
 
   return (
     <div className="space-y-2 px-2">
-      {teamsList.map((team) => {
+      {teamsList.map(team => {
         const isExpanded = expandedTeams.has(team.id)
         const chatCount = team.chats.length
         const showCachedIndicator = team.chatsLoaded && chatCount > 0
 
         return (
           <div key={team.id} className="border-b border-border/30 pb-2">
-            {/* Team Header */}
+            {}
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
@@ -203,7 +208,7 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
               </Button>
             </div>
 
-            {/* Team Chats */}
+            {}
             {isExpanded && (
               <div className="ml-4 mt-1 space-y-1">
                 {team.chatsLoading ? (
@@ -211,7 +216,7 @@ export function TeamSidebarClient({ teams, userId, isSuperAdmin, onLoadChats }: 
                     Loading chats...
                   </div>
                 ) : team.chats.length > 0 ? (
-                  team.chats.map((chat) => (
+                  team.chats.map(chat => (
                     <SidebarItem key={chat.id} chat={chat}>
                       <SidebarActions
                         chat={chat}

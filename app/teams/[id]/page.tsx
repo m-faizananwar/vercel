@@ -30,7 +30,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
 
   return (
     <div className="container mx-auto max-w-6xl space-y-8 p-6">
-      {/* Team Header */}
+      {}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
@@ -43,19 +43,17 @@ export default async function TeamPage({ params }: TeamPageProps) {
             {team.user_role === 'admin' && <TeamSettings team={team} />}
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <IconUsers className="h-4 w-4" />
             {team.member_count} member{team.member_count !== 1 ? 's' : ''}
           </div>
-          <div>
-            Created {new Date(team.created_at).toLocaleDateString()}
-          </div>
+          <div>Created {new Date(team.created_at).toLocaleDateString()}</div>
         </div>
       </div>
 
-      {/* Team Join Code (only for admins) */}
+      {}
       {team.user_role === 'admin' && (
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Invite Members</h2>
@@ -63,7 +61,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
         </div>
       )}
 
-      {/* Team Members */}
+      {}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Team Members</h2>
         <TeamMembersList team={team} />

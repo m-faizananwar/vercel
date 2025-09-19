@@ -13,7 +13,7 @@ export function useEnterSubmit(): {
       event.key === 'Enter' &&
       !event.shiftKey &&
       !event.nativeEvent.isComposing &&
-      !event.repeat // prevent auto-repeat flooding
+      !event.repeat
     ) {
       formRef.current?.requestSubmit()
       event.preventDefault()

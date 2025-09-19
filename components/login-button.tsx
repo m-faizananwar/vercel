@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { getSupabaseBrowser } from '@/lib/supabase-browser'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 import { cn } from '@/lib/utils'
 import { Button, type ButtonProps } from '@/components/ui/button'
@@ -19,8 +19,7 @@ export function LoginButton({
   ...props
 }: LoginButtonProps) {
   const [isLoading, setIsLoading] = React.useState(false)
-  // Create a Supabase client configured with cookie-based storage
-  const supabase = getSupabaseBrowser()
+  const supabase = createClientComponentClient()
 
   if (process.env.NEXT_PUBLIC_AUTH_GITHUB !== 'true') {
     return null
@@ -38,10 +37,10 @@ export function LoginButton({
       }}
       disabled={isLoading}
       className={cn(
-        "h-12 w-full rounded-2xl border-border/50 bg-muted/20 hover:bg-muted/40",
-        "transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]",
-        "font-medium shadow-sm hover:shadow-md",
-        "disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50",
+        'h-12 w-full rounded-2xl border-border/50 bg-muted/20 hover:bg-muted/40',
+        'transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]',
+        'font-medium shadow-sm hover:shadow-md',
+        'disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       {...props}

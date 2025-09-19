@@ -12,7 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import { IconPlus } from '@/components/ui/icons'
 import { toast } from 'react-hot-toast'
@@ -69,7 +69,7 @@ export function CreateUserForm() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="user@example.com"
                 required
               />
@@ -80,7 +80,7 @@ export function CreateUserForm() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 placeholder="Введите пароль"
                 minLength={4}
                 required
@@ -91,10 +91,17 @@ export function CreateUserForm() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               Отмена
             </Button>
-            <Button type="submit" disabled={loading || !email.trim() || !password.trim()}>
+            <Button
+              type="submit"
+              disabled={loading || !email.trim() || !password.trim()}
+            >
               {loading ? 'Создание...' : 'Создать пользователя'}
             </Button>
           </DialogFooter>

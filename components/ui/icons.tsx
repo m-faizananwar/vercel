@@ -104,8 +104,6 @@ function IconOpenAI({ className, ...props }: React.ComponentProps<'svg'>) {
   )
 }
 
-
-
 function IconGitHub({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
     <svg

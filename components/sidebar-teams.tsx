@@ -19,7 +19,10 @@ interface TeamBasic {
   user_role?: 'admin' | 'member'
 }
 
-export function SidebarTeams({ session, isSuperAdmin = false }: SidebarTeamsProps) {
+export function SidebarTeams({
+  session,
+  isSuperAdmin = false
+}: SidebarTeamsProps) {
   const [teams, setTeams] = useState<TeamBasic[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -34,12 +37,10 @@ export function SidebarTeams({ session, isSuperAdmin = false }: SidebarTeamsProp
 
       try {
         setLoading(true)
-        
-        // First check if we have cached teams
+
         const cachedTeams = cache.getTeams(session.user.id)
-        
+
         if (cachedTeams && cachedTeams.length > 0) {
-          // We have cached teams, use them immediately
           const basicTeams: TeamBasic[] = cachedTeams.map((team: any) => ({
             id: team.id,
             name: team.name,
@@ -47,11 +48,10 @@ export function SidebarTeams({ session, isSuperAdmin = false }: SidebarTeamsProp
             member_count: team.member_count,
             user_role: team.user_role
           }))
-          
+
           setTeams(basicTeams)
           setLoading(false)
-          
-          // Count how many teams already have cached chats
+
           let cachedChatsCount = 0
           cachedTeams.forEach(team => {
             const teamChats = cache.getChats(team.id)
@@ -60,14 +60,13 @@ export function SidebarTeams({ session, isSuperAdmin = false }: SidebarTeamsProp
             }
           })
           setPrefetchedChats(cachedChatsCount)
-          
-          return // Exit early if we have cached data
-        }
-        
-        // If no cached teams, proceed with full prefetch
-        const { teams: teamsData, chatsPreloaded } = await prefetchTeamsAndChats(session.user.id)
 
-        // Transform teams to basic format
+          return
+        }
+
+        const { teams: teamsData, chatsPreloaded } =
+          await prefetchTeamsAndChats(session.user.id)
+
         const basicTeams: TeamBasic[] = teamsData.map((team: any) => ({
           id: team.id,
           name: team.name,
@@ -78,9 +77,7 @@ export function SidebarTeams({ session, isSuperAdmin = false }: SidebarTeamsProp
 
         setTeams(basicTeams)
         setPrefetchedChats(chatsPreloaded)
-        
       } catch (err) {
-        console.error('Error loading teams and chats:', err)
         setError('Failed to load teams')
       } finally {
         setLoading(false)
@@ -91,7 +88,11 @@ export function SidebarTeams({ session, isSuperAdmin = false }: SidebarTeamsProp
   }, [session?.user?.id])
 
   if (loading) {
-    return <div className="px-4 py-3 text-sm text-muted-foreground">Loading teams and chats...</div>
+    return (
+      <div className="px-4 py-3 text-sm text-muted-foreground">
+        Loading teams and chats...
+      </div>
+    )
   }
 
   if (error) {
@@ -99,17 +100,25 @@ export function SidebarTeams({ session, isSuperAdmin = false }: SidebarTeamsProp
   }
 
   if (!session?.user?.id) {
-    return <div className="px-4 py-3 text-sm text-muted-foreground">No teams found</div>
+    return (
+      <div className="px-4 py-3 text-sm text-muted-foreground">
+        No teams found
+      </div>
+    )
   }
 
   if (!teams || teams.length === 0) {
-    return <div className="px-4 py-3 text-sm text-muted-foreground">No teams found</div>
+    return (
+      <div className="px-4 py-3 text-sm text-muted-foreground">
+        No teams found
+      </div>
+    )
   }
 
   return (
-    <TeamSidebarClient 
-      teams={teams} 
-      userId={session.user.id} 
+    <TeamSidebarClient
+      teams={teams}
+      userId={session.user.id}
       isSuperAdmin={isSuperAdmin}
       onLoadChats={getChats}
     />

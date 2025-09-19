@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 
@@ -19,7 +19,6 @@ export interface Model {
   supportsVision?: boolean
 }
 
-// Popular OpenRouter models
 export const AVAILABLE_MODELS: Model[] = [
   {
     id: 'openai/gpt-4o',
@@ -49,7 +48,7 @@ export const AVAILABLE_MODELS: Model[] = [
     name: 'Claude 3.5 Sonnet',
     provider: 'Anthropic',
     contextLength: 200000,
-    description: 'Anthropic\'s most capable model'
+    description: "Anthropic's most capable model"
   },
   {
     id: 'anthropic/claude-3-haiku',
@@ -59,11 +58,11 @@ export const AVAILABLE_MODELS: Model[] = [
     description: 'Fast and affordable Claude model'
   },
   {
-    id: 'google/gemini-pro-vision',
-    name: 'Gemini Pro Vision',
+    id: 'google/gemini-2.5-pro',
+    name: 'Gemini 2.5 Pro',
     provider: 'Google',
-    contextLength: 32768,
-    description: 'Google\'s multimodal AI model with vision',
+    contextLength: 1048576,
+    description: "Google's most advanced reasoning model with multimodal capabilities",
     supportsVision: true
   },
   {
@@ -71,14 +70,14 @@ export const AVAILABLE_MODELS: Model[] = [
     name: 'Llama 3.1 70B',
     provider: 'Meta',
     contextLength: 131072,
-    description: 'Meta\'s open-source model'
+    description: "Meta's open-source model"
   },
   {
     id: 'mistralai/mistral-large',
     name: 'Mistral Large',
     provider: 'Mistral AI',
     contextLength: 128000,
-    description: 'Mistral\'s flagship model'
+    description: "Mistral's flagship model"
   }
 ]
 
@@ -88,17 +87,23 @@ interface ModelSelectorProps {
   disabled?: boolean
 }
 
-export function ModelSelector({ selectedModel, onModelChange, disabled }: ModelSelectorProps) {
-  const selectedModelData = AVAILABLE_MODELS.find(model => model.id === selectedModel)
+export function ModelSelector({
+  selectedModel,
+  onModelChange,
+  disabled
+}: ModelSelectorProps) {
+  const selectedModelData = AVAILABLE_MODELS.find(
+    model => model.id === selectedModel
+  )
 
   return (
     <div className="space-y-2">
       <Label htmlFor="model-select" className="text-sm font-medium">
         ИИ Модель
       </Label>
-      <Select 
-        value={selectedModel} 
-        onValueChange={onModelChange} 
+      <Select
+        value={selectedModel}
+        onValueChange={onModelChange}
         disabled={disabled}
       >
         <SelectTrigger id="model-select" className="w-full">
@@ -118,7 +123,7 @@ export function ModelSelector({ selectedModel, onModelChange, disabled }: ModelS
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {AVAILABLE_MODELS.map((model) => (
+          {AVAILABLE_MODELS.map(model => (
             <SelectItem key={model.id} value={model.id}>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">

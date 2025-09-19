@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
@@ -17,7 +17,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog'
 
 import { superAdminDeleteTeam } from '@/app/super-admin-actions'
@@ -41,16 +41,13 @@ export function SuperAdminTeamActions({
     setIsLoading(true)
     try {
       const result = await superAdminDeleteTeam(teamId)
-      
+
       if (result && typeof result === 'object' && 'error' in result) {
-        console.error('Delete team error:', result.error)
         alert('Error: ' + result.error)
       } else {
-        console.log('Team deleted successfully')
         router.refresh()
       }
     } catch (error) {
-      console.error('Failed to delete team:', error)
       alert('Failed to delete team')
     } finally {
       setIsLoading(false)
@@ -66,12 +63,17 @@ export function SuperAdminTeamActions({
             •••
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" side="bottom" sideOffset={4} className="w-48">
+        <DropdownMenuContent
+          align="end"
+          side="bottom"
+          sideOffset={4}
+          className="w-48"
+        >
           <DropdownMenuItem disabled className="text-sm text-muted-foreground">
             {teamName}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          
+
           <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}
             className="text-red-600 focus:text-red-600"
@@ -86,15 +88,15 @@ export function SuperAdminTeamActions({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Team</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the team &quot;{teamName}&quot;? 
-              This action cannot be undone and will delete all team data including:
+              Are you sure you want to delete the team &quot;{teamName}&quot;?
+              This action cannot be undone and will delete all team data
+              including:
               <br />
               <br />
               • All team members and their roles
               <br />
               • All team chat conversations
-              <br />
-              • All team settings and data
+              <br />• All team settings and data
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

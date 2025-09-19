@@ -31,7 +31,6 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
 
   const signOut = async () => {
     try {
-      // Wait for logout API call to complete
       await fetch('/api/logout', {
         method: 'POST',
         credentials: 'include',
@@ -40,24 +39,21 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
         }
       })
     } catch {
-      // ignore
     }
-    
-    // Best-effort cleanup of potential stale auth artifacts
+
     try {
       const possibleKeys = [
         'sb-access-token',
         'sb-refresh-token',
         'supabase-auth-token',
-        'auth-token',
+        'auth-token'
       ]
       possibleKeys.forEach(k => {
         localStorage.removeItem(k)
         sessionStorage.removeItem(k)
       })
     } catch {}
-    
-    // Use hard redirect to ensure browser clears all state
+
     window.location.href = '/sign-in'
   }
 
@@ -66,14 +62,11 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
       localStorage.clear()
       sessionStorage.clear()
     } catch {}
-    // Force a hard reload to break any redirect loop state
     window.location.href = '/sign-in'
   }
 
   const displayName =
-    user?.user_metadata?.name ||
-    user?.email?.split('@')[0] ||
-    'User'
+    user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'
 
   const initials = (() => {
     if (!displayName) return 'U'
@@ -103,7 +96,9 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
                 {initials}
               </div>
             )}
-            <span className="ml-2 text-sm font-medium">{displayName || '👋🏼'}</span>
+            <span className="ml-2 text-sm font-medium">
+              {displayName || '👋🏼'}
+            </span>
             <svg
               className="ml-2 h-4 w-4 text-muted-foreground/60"
               fill="none"
@@ -120,22 +115,30 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
             </svg>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent 
-          sideOffset={8} 
-          align="start" 
+        <DropdownMenuContent
+          sideOffset={8}
+          align="start"
           className="w-[200px] rounded-2xl border border-border/50 bg-background/95 p-2 shadow-lg backdrop-blur-sm"
         >
           <DropdownMenuItem className="flex-col items-start rounded-xl p-3 hover:bg-muted/50 focus:bg-muted/50">
             <div className="text-sm font-semibold text-foreground">
-              {displayName /* was: user?.user_metadata.name (unsafe when user_metadata undefined) */}
+              {
+                displayName 
+              }
             </div>
             <div className="text-xs text-muted-foreground">{user?.email}</div>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="my-1 bg-border/50" />
           {isSuperAdmin && (
             <>
-              <DropdownMenuItem asChild className="cursor-pointer rounded-xl p-3 hover:bg-yellow-500/10 focus:bg-yellow-500/10">
-                <Link href="/super-admin" className="flex items-center text-sm font-medium text-yellow-600 dark:text-yellow-400">
+              <DropdownMenuItem
+                asChild
+                className="cursor-pointer rounded-xl p-3 hover:bg-yellow-500/10 focus:bg-yellow-500/10"
+              >
+                <Link
+                  href="/super-admin"
+                  className="flex items-center text-sm font-medium text-yellow-600 dark:text-yellow-400"
+                >
                   <IconCrown className="mr-2 h-4 w-4" />
                   Панель супер-администратора
                 </Link>
@@ -143,8 +146,8 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
               <DropdownMenuSeparator className="my-1 bg-border/50" />
             </>
           )}
-          <DropdownMenuItem 
-            onClick={signOut} 
+          <DropdownMenuItem
+            onClick={signOut}
             className="cursor-pointer rounded-xl p-3 text-sm font-medium text-destructive hover:bg-destructive/10 focus:bg-destructive/10"
           >
             Выйти

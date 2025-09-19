@@ -1,6 +1,3 @@
--- Fix the get_all_users_with_teams function to include local_users table
--- This fixes the issue where newly created users weren't showing in admin dashboard
-
 create or replace function public.get_all_users_with_teams()
 returns table (
     user_id uuid,
@@ -13,7 +10,6 @@ returns table (
 language sql
 security definer
 as $$
-    -- Get users from both auth.users and local_users tables
     select
         u.id as user_id,
         u.email,
@@ -39,7 +35,6 @@ as $$
 
     UNION ALL
 
-    -- Get users from local_users table
     select
         lu.id as user_id,
         lu.email,

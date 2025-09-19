@@ -29,11 +29,6 @@ export default async function TeamChatPage({ params }: TeamChatPageProps) {
   const id = nanoid()
 
   return (
-    <Chat 
-      id={id} 
-  session={session}
-      teamId={team.id}
-      teamName={team.name}
-    />
+    <Chat id={id} session={session} teamId={team.id} teamName={team.name} />
   )
 }

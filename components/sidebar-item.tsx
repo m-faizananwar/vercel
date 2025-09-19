@@ -3,7 +3,11 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { IconMessage, IconUsers } from '@/components/ui/icons'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
 import { setCachedChatContentClient } from '@/lib/cache'
 
 interface SidebarItemProps {
@@ -29,8 +33,7 @@ export function SidebarItem({ chat, children }: SidebarItemProps) {
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
-    
-    // Cache the chat content before navigation for instant loading
+
     if (chat.messages) {
       setCachedChatContentClient(chat.id, {
         id: chat.id,
@@ -42,8 +45,7 @@ export function SidebarItem({ chat, children }: SidebarItemProps) {
         teamId: chat.teamId
       })
     }
-    
-    // Use client-side navigation
+
     router.push(chat.path)
   }
 
@@ -52,11 +54,11 @@ export function SidebarItem({ chat, children }: SidebarItemProps) {
       <button
         onClick={handleClick}
         className={cn(
-          "group flex w-full items-center rounded-2xl px-3 py-2.5 text-sm transition-all duration-200 text-left",
-          "hover:scale-[1.01] hover:bg-muted/40 active:scale-[0.99]",
+          'group flex w-full items-center rounded-2xl px-3 py-2.5 text-sm transition-all duration-200 text-left',
+          'hover:scale-[1.01] hover:bg-muted/40 active:scale-[0.99]',
           isActive
-            ? "border border-primary/20 bg-primary/10 text-primary shadow-sm"
-            : "text-foreground/80 hover:text-foreground"
+            ? 'border border-primary/20 bg-primary/10 text-primary shadow-sm'
+            : 'text-foreground/80 hover:text-foreground'
         )}
       >
         <div className="mr-3 flex h-6 w-6 shrink-0 items-center justify-center">
@@ -76,8 +78,8 @@ export function SidebarItem({ chat, children }: SidebarItemProps) {
         </div>
         <div
           className={cn(
-            "truncate font-medium",
-            isActive ? "flex-1 pr-20" : "flex-1"
+            'truncate font-medium',
+            isActive ? 'flex-1 pr-20' : 'flex-1'
           )}
           title={chat.title}
         >

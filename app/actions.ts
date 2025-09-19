@@ -7,13 +7,17 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { type Chat } from '@/lib/types'
-import { getCachedChatsOrFetch, getCachedChatContentOrFetch, cache } from '@/lib/cache'
+import {
+  getCachedChatsOrFetch,
+  getCachedChatContentOrFetch,
+  cache
+} from '@/lib/cache'
 
 export async function getChats(userId?: string | null, teamId?: string | null) {
   if (!userId || !teamId) {
     return []
   }
-  
+
   return getCachedChatsOrFetch(teamId, async () => {
     try {
       const cookieStore = cookies()
@@ -26,10 +30,9 @@ export async function getChats(userId?: string | null, teamId?: string | null) {
         .select('payload')
         .eq('team_id', teamId)
         .order('payload->createdAt', { ascending: false })
-        .returns<{ payload: Chat | null }[]>()
         .throwOnError()
 
-      return (data?.map((entry) => entry.payload!).filter(Boolean) as Chat[]) ?? []
+      return (data?.map(entry => entry.payload) as Chat[]) ?? []
     } catch (error) {
       return []
     }
@@ -48,8 +51,7 @@ export async function getChat(id: string) {
       .eq('id', id)
       .maybeSingle()
 
-    const payload = (data as { payload: Chat } | null)?.payload
-    return payload ?? null
+    return (data?.payload as Chat) ?? null
   })
 }
 
@@ -59,22 +61,19 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
     const supabase = createServerActionClient<Database>({
       cookies: () => cookieStore
     })
-    
-    // Get the chat before deleting to find its team for cache invalidation
+
     const { data: chatData } = await supabase
       .from('chats')
       .select('payload')
       .eq('id', id)
       .maybeSingle()
-    
+
     await supabase.from('chats').delete().eq('id', id).throwOnError()
 
-    // Invalidate cache for this chat and its team's chat list
     cache.invalidateChatContent(id)
-    
-    const chatPayload = (chatData as { payload: Chat } | null)?.payload
-    if (chatPayload?.teamId) {
-      cache.invalidateChats(chatPayload.teamId)
+
+    if (chatData?.payload && (chatData.payload as any).teamId) {
+      cache.invalidateChats((chatData.payload as any).teamId)
     }
 
     revalidatePath('/')
@@ -93,14 +92,12 @@ export async function clearChats() {
       cookies: () => cookieStore
     })
     await supabase.from('chats').delete().throwOnError()
-    
-    // Clear all chat-related cache
+
     cache.clearAll()
-    
+
     revalidatePath('/')
     return redirect('/')
   } catch (error) {
-    console.log('clear chats error', error)
     return {
       error: 'Unauthorized'
     }
@@ -119,8 +116,7 @@ export async function getSharedChat(id: string) {
     .not('payload->sharePath', 'is', null)
     .maybeSingle()
 
-  const payload = (data as { payload: Chat } | null)?.payload
-  return payload ?? null
+  return (data?.payload as Chat) ?? null
 }
 
 export async function shareChat(chat: Chat) {
@@ -135,7 +131,7 @@ export async function shareChat(chat: Chat) {
   })
   await supabase
     .from('chats')
-  .update<Database['public']['Tables']['chats']['Update']>({ payload: payload as any })
+    .update({ payload: payload as any })
     .eq('id', chat.id)
     .throwOnError()
 

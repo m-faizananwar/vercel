@@ -28,7 +28,7 @@ export default async function TeamsPage() {
         </p>
       </div>
 
-      {/* Join Team Section */}
+      {}
       <div className="mb-6">
         <h2 className="mb-4 text-lg font-semibold">Присоединиться к команде</h2>
         <div className="rounded-lg border border-border/60 p-4">
@@ -42,28 +42,29 @@ export default async function TeamsPage() {
         </div>
       </div>
 
-      {/* My Teams */}
+      {}
       <div>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Мои команды</h2>
-          <CreateTeamForm  />
+          <CreateTeamForm />
         </div>
-        
+
         {teams.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border/60 p-8 text-center">
             <div className="space-y-3">
               <h3 className="text-base font-medium">Команд пока нет</h3>
               <p className="text-sm text-muted-foreground">
-                Создайте свою команду или используйте код присоединения для участия в существующей
+                Создайте свою команду или используйте код присоединения для
+                участия в существующей
               </p>
               <div className="pt-2">
-                <CreateTeamForm  />
+                <CreateTeamForm />
               </div>
             </div>
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {teams.map((team) => (
+            {teams.map(team => (
               <TeamCard key={team.id} team={team} />
             ))}
           </div>

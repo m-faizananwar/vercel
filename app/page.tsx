@@ -9,8 +9,8 @@ export const runtime = 'edge'
 
 export default async function IndexPage() {
   const cookieStore = cookies()
-  // Use fast auth first, fallback to regular auth
-  const session = await authFast({ cookieStore }) || await auth({ cookieStore })
+  const session =
+    (await authFast({ cookieStore })) || (await auth({ cookieStore }))
   if (!session?.user?.id) {
     redirect('/sign-in')
   }
@@ -20,5 +20,7 @@ export default async function IndexPage() {
     redirect('/teams')
   }
   const id = nanoid()
-  return <Chat id={id} teamId={team.id} teamName={team.name} session={session} />
+  return (
+    <Chat id={id} teamId={team.id} teamName={team.name} session={session} />
+  )
 }

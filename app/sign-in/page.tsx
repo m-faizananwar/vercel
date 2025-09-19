@@ -17,55 +17,58 @@ export default function SignInPage() {
   })
   const router = useRouter()
 
-  // Memoize form validation
   const isFormValid = useMemo(() => {
     return formData.email.trim() !== '' && formData.password !== ''
   }, [formData.email, formData.password])
 
-  // Optimize input change handlers
-  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, email: e.target.value }))
-  }, [])
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData(prev => ({ ...prev, email: e.target.value }))
+    },
+    []
+  )
 
-  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, password: e.target.value }))
-  }, [])
+  const handlePasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData(prev => ({ ...prev, password: e.target.value }))
+    },
+    []
+  )
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!isFormValid || isLoading) return
-    
-    setIsLoading(true)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
 
-    try {
-      const formData_ = new FormData()
-      formData_.append('email', formData.email.trim().toLowerCase())
-      formData_.append('password', formData.password)
+      if (!isFormValid || isLoading) return
 
-      const response = await fetch('/api/auth/sign-in', {
-        method: 'POST',
-        body: formData_
-      })
+      setIsLoading(true)
 
-      const result = await response.json()
+      try {
+        const formData_ = new FormData()
+        formData_.append('email', formData.email.trim().toLowerCase())
+        formData_.append('password', formData.password)
 
-      if (!response.ok || result.error) {
-        toast.error(result.error || 'Произошла ошибка при входе')
+        const response = await fetch('/api/auth/sign-in', {
+          method: 'POST',
+          body: formData_
+        })
+
+        const result = await response.json()
+
+        if (!response.ok || result.error) {
+          toast.error(result.error || 'Произошла ошибка при входе')
+          setIsLoading(false)
+          return
+        }
+
+        window.location.href = '/'
+      } catch (error) {
+        toast.error('Произошла ошибка сети. Попробуйте снова.')
         setIsLoading(false)
-        return
       }
-
-      // Immediate redirect without delay - no success message needed
-      // The redirect itself indicates success
-      window.location.href = '/'
-      
-    } catch (error) {
-      console.error('Login error:', error)
-      toast.error('Произошла ошибка сети. Попробуйте снова.')
-      setIsLoading(false)
-    }
-  }, [formData.email, formData.password, isFormValid, isLoading])
+    },
+    [formData.email, formData.password, isFormValid, isLoading]
+  )
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12 fade-in">
@@ -82,9 +85,9 @@ export default function SignInPage() {
                 value={formData.email}
                 onChange={handleEmailChange}
                 className={cn(
-                  "h-12 rounded-2xl border-border/50 bg-muted/20 px-4",
-                  "focus:border-primary/50 focus:bg-background/50 focus:ring-1 focus:ring-primary/20",
-                  "transition-all duration-200 placeholder:text-muted-foreground/50"
+                  'h-12 rounded-2xl border-border/50 bg-muted/20 px-4',
+                  'focus:border-primary/50 focus:bg-background/50 focus:ring-1 focus:ring-primary/20',
+                  'transition-all duration-200 placeholder:text-muted-foreground/50'
                 )}
                 placeholder="вы@example.com"
                 disabled={isLoading}
@@ -99,9 +102,9 @@ export default function SignInPage() {
                 value={formData.password}
                 onChange={handlePasswordChange}
                 className={cn(
-                  "h-12 rounded-2xl border-border/50 bg-muted/20 px-4",
-                  "focus:border-primary/50 focus:bg-background/50 focus:ring-1 focus:ring-primary/20",
-                  "transition-all duration-200 placeholder:text-muted-foreground/50"
+                  'h-12 rounded-2xl border-border/50 bg-muted/20 px-4',
+                  'focus:border-primary/50 focus:bg-background/50 focus:ring-1 focus:ring-primary/20',
+                  'transition-all duration-200 placeholder:text-muted-foreground/50'
                 )}
                 placeholder="••••••••"
                 disabled={isLoading}
@@ -111,12 +114,14 @@ export default function SignInPage() {
               type="submit"
               disabled={isLoading || !isFormValid}
               className={cn(
-                "h-12 w-full rounded-2xl font-medium transition-all duration-200",
-                "shadow-sm hover:scale-[1.02] hover:shadow-md active:scale-[0.98]",
-                "disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
+                'h-12 w-full rounded-2xl font-medium transition-all duration-200',
+                'shadow-sm hover:scale-[1.02] hover:shadow-md active:scale-[0.98]',
+                'disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50'
               )}
             >
-              {isLoading && <IconSpinner className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && (
+                <IconSpinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
               {isLoading ? 'Выполняется вход...' : 'Войти'}
             </Button>
             <p className="mt-4 text-center text-sm text-muted-foreground">
