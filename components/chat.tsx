@@ -132,9 +132,20 @@ export function Chat({
 
   useEffect(() => {
     if (id && messages.length > 0) {
+      const getTitleFromMessage = (msg: Message | undefined) => {
+        if (!msg) return 'New Chat'
+        const c: any = (msg as any).content
+        if (typeof c === 'string') return c.substring(0, 100)
+        if (Array.isArray(c)) {
+          const textPart = c.find((p: any) => p?.type === 'text' && typeof p.text === 'string')
+          if (textPart?.text) return textPart.text.substring(0, 100)
+        }
+        return 'New Chat'
+      }
+
       const chatData = cachedChat || {
         id,
-        title: messages[0]?.content?.substring(0, 100) || 'New Chat',
+        title: getTitleFromMessage(messages[0]),
         createdAt: new Date(),
         userId: session?.user?.id || '',
         path: `/teams/${selectedTeamId || teamId}/chat/${id}`,
