@@ -81,6 +81,82 @@ export function PromptForm({
     })
   }
 
+  const estimateDataUrlBytes = (dataUrl: string): number => {
+    const base64 = dataUrl.split(',')[1] || ''
+    return Math.ceil((base64.length * 3) / 4)
+  }
+
+  const readImageCompressedAsDataUrl = (
+    file: File,
+    options?: {
+      maxBytes?: number
+      maxWidth?: number
+      maxHeight?: number
+      initialQuality?: number
+      minQuality?: number
+      step?: number
+    }
+  ): Promise<string> => {
+    const {
+      maxBytes = 900_000,
+      maxWidth = 1600,
+      maxHeight = 1600,
+      initialQuality = 0.85,
+      minQuality = 0.5,
+      step = 0.1
+    } = options || {}
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onerror = reject
+      reader.onload = () => {
+        const img = new Image()
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas')
+            const ctx = canvas.getContext('2d')
+            if (!ctx) return reject(new Error('Canvas not supported'))
+
+            let { width, height } = img
+            const ratio = Math.min(1, maxWidth / width, maxHeight / height)
+            width = Math.max(1, Math.floor(width * ratio))
+            height = Math.max(1, Math.floor(height * ratio))
+            canvas.width = width
+            canvas.height = height
+            ctx.drawImage(img, 0, 0, width, height)
+
+            let quality = initialQuality
+            let dataUrl = canvas.toDataURL('image/jpeg', quality)
+            let bytes = estimateDataUrlBytes(dataUrl)
+
+            while (bytes > maxBytes && quality > minQuality) {
+              quality = Math.max(minQuality, +(quality - step).toFixed(2))
+              dataUrl = canvas.toDataURL('image/jpeg', quality)
+              bytes = estimateDataUrlBytes(dataUrl)
+            }
+
+            if (bytes > maxBytes) {
+              const scale = Math.sqrt(maxBytes / Math.max(bytes, 1))
+              const newW = Math.max(1, Math.floor(width * Math.max(0.5, scale)))
+              const newH = Math.max(1, Math.floor(height * Math.max(0.5, scale)))
+              canvas.width = newW
+              canvas.height = newH
+              ctx.drawImage(img, 0, 0, newW, newH)
+              dataUrl = canvas.toDataURL('image/jpeg', Math.max(minQuality, quality))
+            }
+
+            resolve(dataUrl)
+          } catch (e) {
+            reject(e)
+          }
+        }
+        img.onerror = reject
+        img.src = reader.result as string
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
   const readFileAsText = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -101,9 +177,24 @@ export function PromptForm({
         const isImage = file.type.startsWith('image/')
         let content: string
         if (isImage) {
-          content = await readFileAsBase64(file)
+          const forceCompress = process.env.NEXT_PUBLIC_IMAGE_COMPRESS !== '0'
+          if (forceCompress) {
+            content = await readImageCompressedAsDataUrl(file)
+          } else {
+            content = await readFileAsBase64(file)
+            const bytes = estimateDataUrlBytes(content)
+            if (bytes > 1_000_000) {
+              // Fallback to compression if too large
+              content = await readImageCompressedAsDataUrl(file)
+            }
+          }
         } else {
           content = await readFileAsBase64(file)
+        }
+        const bytes = estimateDataUrlBytes(content)
+        if (bytes > 1_500_000) {
+          alert('Image is too large. Please choose a smaller image (≈1MB).')
+          return
         }
         const attachment: FileAttachment = {
           name: file.name,
