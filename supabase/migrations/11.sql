@@ -1,79 +1,16 @@
-create or replace function public.get_all_users_with_teams()
-returns table (
-    user_id uuid,
-    email text,
-    created_at timestamptz,
-    team_count bigint,
-    total_chats bigint,
-    is_super_admin boolean
-)
-language sql
-security definer
-as $$
-    with all_users as (
-        select
-            u.id as user_id,
-            u.email,
-            u.created_at,
-            coalesce(team_stats.team_count, 0) as team_count,
-            coalesce(chat_stats.chat_count, 0) as total_chats
-        from auth.users u
-        left join (
-            select
-                tm.user_id,
-                count(distinct tm.team_id) as team_count
-            from public.team_members tm
-            group by tm.user_id
-        ) team_stats on team_stats.user_id = u.id
-        left join (
-            select
-                c.user_id,
-                count(*) as chat_count
-            from public.chats c
-            group by c.user_id
-        ) chat_stats on chat_stats.user_id = u.id
+-- Revert single-team membership restriction.
+-- This drops the unique index on (user_id) so users can join/create multiple teams.
 
-        UNION ALL
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_indexes
+    WHERE schemaname = 'public'
+      AND indexname = 'team_members_user_id_unique'
+  ) THEN
+    EXECUTE 'DROP INDEX public.team_members_user_id_unique';
+  END IF;
+END $$;
 
-        select
-            lu.id as user_id,
-            lu.email,
-            lu.created_at,
-            coalesce(team_stats.team_count, 0) as team_count,
-            coalesce(chat_stats.chat_count, 0) as total_chats
-        from public.local_users lu
-        left join (
-            select
-                tm.user_id,
-                count(distinct tm.team_id) as team_count
-            from public.team_members tm
-            group by tm.user_id
-        ) team_stats on team_stats.user_id = lu.id
-        left join (
-            select
-                c.user_id,
-                count(*) as chat_count
-            from public.chats c
-            group by c.user_id
-        ) chat_stats on chat_stats.user_id = lu.id
-    ),
-    deduplicated_users as (
-        select distinct on (lower(email))
-            user_id,
-            email,
-            created_at,
-            team_count,
-            total_chats
-        from all_users
-        order by lower(email), created_at desc
-    )
-    select
-        du.user_id,
-        du.email,
-        du.created_at,
-        du.team_count,
-        du.total_chats,
-        exists(select 1 from public.super_admins sa where sa.user_id = du.user_id) as is_super_admin
-    from deduplicated_users du
-    order by du.created_at desc;
-$$;
+-- (team_id, user_id) composite uniqueness remains to prevent duplicate membership in the same team.
+-- No changes to RLS needed.

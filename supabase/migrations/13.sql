@@ -1,57 +1,86 @@
-ALTER TABLE public.teams ENABLE ROW LEVEL SECURITY;
-DO $$
-DECLARE rec record;
-BEGIN
-  FOR rec IN (
-    SELECT policyname FROM pg_policies WHERE schemaname='public' AND tablename='teams'
-  ) LOOP
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.teams', rec.policyname);
-  END LOOP;
-END $$;
+-- Fix duplicate users in get_all_users_with_teams function
+-- This removes duplicate users and properly handles users that exist in both tables
 
-CREATE POLICY "public select teams" ON public.teams FOR SELECT TO public USING (true);
-CREATE POLICY "public insert teams" ON public.teams FOR INSERT TO public WITH CHECK (true);
-CREATE POLICY "public update teams" ON public.teams FOR UPDATE TO public USING (true) WITH CHECK (true);
-CREATE POLICY "public delete teams" ON public.teams FOR DELETE TO public USING (true);
+create or replace function public.get_all_users_with_teams()
+returns table (
+    user_id uuid,
+    email text,
+    created_at timestamptz,
+    team_count bigint,
+    total_chats bigint,
+    is_super_admin boolean
+)
+language sql
+security definer
+as $$
+    -- Get all users from both tables, then deduplicate by email
+    with all_users as (
+        -- Get users from auth.users
+        select
+            u.id as user_id,
+            u.email,
+            u.created_at,
+            coalesce(team_stats.team_count, 0) as team_count,
+            coalesce(chat_stats.chat_count, 0) as total_chats
+        from auth.users u
+        left join (
+            select
+                tm.user_id,
+                count(distinct tm.team_id) as team_count
+            from public.team_members tm
+            group by tm.user_id
+        ) team_stats on team_stats.user_id = u.id
+        left join (
+            select
+                c.user_id,
+                count(*) as chat_count
+            from public.chats c
+            group by c.user_id
+        ) chat_stats on chat_stats.user_id = u.id
 
-ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
-DO $$
-DECLARE rec record;
-BEGIN
-  FOR rec IN (
-    SELECT policyname FROM pg_policies WHERE schemaname='public' AND tablename='team_members'
-  ) LOOP
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.team_members', rec.policyname);
-  END LOOP;
-END $$;
+        UNION ALL
 
-CREATE POLICY "public select team_members" ON public.team_members FOR SELECT TO public USING (true);
-CREATE POLICY "public insert team_members" ON public.team_members FOR INSERT TO public WITH CHECK (true);
-CREATE POLICY "public update team_members" ON public.team_members FOR UPDATE TO public USING (true) WITH CHECK (true);
-CREATE POLICY "public delete team_members" ON public.team_members FOR DELETE TO public USING (true);
-
-ALTER TABLE public.chats ENABLE ROW LEVEL SECURITY;
-DO $$
-DECLARE rec record;
-BEGIN
-  FOR rec IN (
-    SELECT policyname FROM pg_policies WHERE schemaname='public' AND tablename='chats'
-  ) LOOP
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.chats', rec.policyname);
-  END LOOP;
-END $$;
-
-CREATE POLICY "public full chats" ON public.chats FOR ALL TO public USING (true) WITH CHECK (true);
-
-ALTER TABLE public.super_admins ENABLE ROW LEVEL SECURITY;
-DO $$
-DECLARE rec record;
-BEGIN
-  FOR rec IN (
-    SELECT policyname FROM pg_policies WHERE schemaname='public' AND tablename='super_admins'
-  ) LOOP
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.super_admins', rec.policyname);
-  END LOOP;
-END $$;
-CREATE POLICY "public select super_admins" ON public.super_admins FOR SELECT TO public USING (true);
-CREATE POLICY "public modify super_admins" ON public.super_admins FOR ALL TO public USING (true) WITH CHECK (true);
+        -- Get users from local_users
+        select
+            lu.id as user_id,
+            lu.email,
+            lu.created_at,
+            coalesce(team_stats.team_count, 0) as team_count,
+            coalesce(chat_stats.chat_count, 0) as total_chats
+        from public.local_users lu
+        left join (
+            select
+                tm.user_id,
+                count(distinct tm.team_id) as team_count
+            from public.team_members tm
+            group by tm.user_id
+        ) team_stats on team_stats.user_id = lu.id
+        left join (
+            select
+                c.user_id,
+                count(*) as chat_count
+            from public.chats c
+            group by c.user_id
+        ) chat_stats on chat_stats.user_id = lu.id
+    ),
+    deduplicated_users as (
+        -- Remove duplicates by email, keeping the most recent entry
+        select distinct on (lower(email))
+            user_id,
+            email,
+            created_at,
+            team_count,
+            total_chats
+        from all_users
+        order by lower(email), created_at desc
+    )
+    select
+        du.user_id,
+        du.email,
+        du.created_at,
+        du.team_count,
+        du.total_chats,
+        exists(select 1 from public.super_admins sa where sa.user_id = du.user_id) as is_super_admin
+    from deduplicated_users du
+    order by du.created_at desc;
+$$;

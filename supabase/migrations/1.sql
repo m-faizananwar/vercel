@@ -12,6 +12,7 @@ alter table "public"."chats" add constraint "chats_user_id_fkey" FOREIGN KEY (us
 
 alter table "public"."chats" validate constraint "chats_user_id_fkey";
 
+-- RLS
 alter table "public"."chats" enable row level security;
 
 create policy "Allow public read for shared chats"
@@ -28,3 +29,6 @@ for all
 to authenticated
 using ((auth.uid() = user_id))
 with check ((auth.uid() = user_id));
+
+
+
