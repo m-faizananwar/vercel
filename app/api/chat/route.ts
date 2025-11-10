@@ -906,3 +906,7 @@ Follow these guidelines:
   })
   return new StreamingTextResponse(stream)
 }
+
+// Configure route segment to increase body size limit for file uploads
+export const runtime = 'nodejs'
+export const maxDuration = 60 // Maximum function duration in seconds

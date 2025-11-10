@@ -8,5 +8,11 @@ module.exports = {
         hostname: '**.githubusercontent.com'
       }
     ]
+  },
+  // Increase body size limit for API routes to allow large file uploads
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '50mb'
+    }
   }
 }

@@ -105,8 +105,6 @@ export function Chat({
               toast.error(
                 'Присоединитесь к команде или создайте команду, чтобы начать чат.'
               )
-            } else if (response.status === 413) {
-              toast.error('📷 Изображение слишком большое. Пожалуйста, отправьте файл ≈1MB или меньше.')
             } else if (response.status === 402) {
               toast.error('💳 ' + errorMessage, { duration: 8000 })
             } else if (response.status === 429) {
