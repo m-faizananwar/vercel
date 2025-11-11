@@ -56,26 +56,23 @@ export function TeamSidebarClient({
   >(() => {
     const teamsToExpand = new Set<string>()
 
-    const initialTeams = teams.reduce(
-      (acc, team) => {
-        const cachedChats = cache.getChats(team.id)
-        const hasChats = cachedChats && cachedChats.length > 0
+    const initialTeams = teams.reduce((acc, team) => {
+      const cachedChats = cache.getChats(team.id)
+      const hasChats = cachedChats && cachedChats.length > 0
 
-        acc[team.id] = {
-          ...team,
-          chats: cachedChats || [],
-          chatsLoaded: !!cachedChats,
-          chatsLoading: false
-        }
+      acc[team.id] = {
+        ...team,
+        chats: cachedChats || [],
+        chatsLoaded: !!cachedChats,
+        chatsLoading: false
+      }
 
-        if (hasChats) {
-          teamsToExpand.add(team.id)
-        }
+      if (hasChats) {
+        teamsToExpand.add(team.id)
+      }
 
-        return acc
-      },
-      {} as Record<string, TeamWithChats>
-    )
+      return acc
+    }, {} as Record<string, TeamWithChats>)
 
     setTimeout(() => {
       setExpandedTeams(teamsToExpand)

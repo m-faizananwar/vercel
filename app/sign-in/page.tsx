@@ -74,7 +74,7 @@ export default function SignInPage() {
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12 fade-in">
       <div className="w-full max-w-md">
         <div className="rounded-3xl border border-border/50 bg-background/80 p-8 shadow-lg backdrop-blur-sm">
-          <h1 className="mb-6 text-2xl font-semibold text-center">Войти</h1>
+          <h1 className="mb-6 text-center text-2xl font-semibold">Войти</h1>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label className="text-sm font-medium">Email</Label>

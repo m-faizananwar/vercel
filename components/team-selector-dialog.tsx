@@ -38,7 +38,7 @@ export function TeamSelectorDialog({
       <Button
         variant="ghost"
         size="sm"
-        className="h-9 px-3 rounded-full bg-muted/50 transition-all duration-200 hover:scale-105 hover:bg-muted active:scale-95"
+        className="h-9 rounded-full bg-muted/50 px-3 transition-all duration-200 hover:scale-105 hover:bg-muted active:scale-95"
         onClick={() => router.push('/teams')}
       >
         <IconPlus className="h-4 w-4" />
@@ -51,20 +51,20 @@ export function TeamSelectorDialog({
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] bg-background border">
+        <DialogContent className="border bg-background sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Создать новый чат</DialogTitle>
             <DialogDescription>
               Создать новый чат в команде &quot;{teams[0].name}&quot;?
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 mt-4">
+          <div className="mt-4 space-y-3">
             <Button
               variant="outline"
-              className="w-full justify-start h-auto p-4"
+              className="h-auto w-full justify-start p-4"
               onClick={() => handleTeamSelect(teams[0].id)}
             >
-              <div className="flex items-center gap-3 w-full">
+              <div className="flex w-full items-center gap-3">
                 <IconTeam className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
                   <div className="font-medium">{teams[0].name}</div>
@@ -83,7 +83,7 @@ export function TeamSelectorDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-background border">
+      <DialogContent className="border bg-background sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Выберите команду для нового чата</DialogTitle>
           <DialogDescription>
@@ -91,25 +91,25 @@ export function TeamSelectorDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3 mt-4">
+        <div className="mt-4 space-y-3">
           {teams.map(team => (
             <Button
               key={team.id}
               variant="outline"
               className={cn(
-                'w-full justify-start h-auto p-4 transition-all duration-200',
-                'hover:scale-[1.02] active:scale-[0.98] hover:shadow-md'
+                'h-auto w-full justify-start p-4 transition-all duration-200',
+                'hover:scale-[1.02] hover:shadow-md active:scale-[0.98]'
               )}
               onClick={() => handleTeamSelect(team.id)}
             >
-              <div className="flex items-center gap-3 w-full">
+              <div className="flex w-full items-center gap-3">
                 <IconTeam className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
                   <div className="font-medium">{team.name}</div>
                   <div className="text-sm text-muted-foreground">
                     {team.description || 'No description'}
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="mt-1 flex items-center gap-2">
                     <Badge
                       variant={
                         team.user_role === 'admin' ? 'default' : 'secondary'

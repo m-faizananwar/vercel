@@ -114,7 +114,9 @@ export function PromptForm({
         setAttachments(prev => [...prev, attachment])
       } catch (error) {
         alert(
-          `Error: ${error instanceof Error ? error.message : 'Failed to process file'}`
+          `Error: ${
+            error instanceof Error ? error.message : 'Failed to process file'
+          }`
         )
       } finally {
         setIsProcessingFile(false)

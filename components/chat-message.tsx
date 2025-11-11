@@ -179,20 +179,20 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
                     const ext = isPdf
                       ? 'PDF'
                       : isDocx
-                        ? 'DOCX'
-                        : isDoc
-                          ? 'DOC'
-                          : isXlsx
-                            ? 'XLSX'
-                            : isPptx
-                              ? 'PPTX'
-                              : isJson
-                                ? 'JSON'
-                                : isCsv
-                                  ? 'CSV'
-                                  : isMarkdown
-                                    ? 'MD'
-                                    : 'TXT'
+                      ? 'DOCX'
+                      : isDoc
+                      ? 'DOC'
+                      : isXlsx
+                      ? 'XLSX'
+                      : isPptx
+                      ? 'PPTX'
+                      : isJson
+                      ? 'JSON'
+                      : isCsv
+                      ? 'CSV'
+                      : isMarkdown
+                      ? 'MD'
+                      : 'TXT'
                     const dlExt = ext.toLowerCase()
                     return (
                       <div

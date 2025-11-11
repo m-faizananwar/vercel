@@ -50,8 +50,7 @@ class SimpleCache {
           }
         }
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   private saveToStorage(): void {
@@ -61,8 +60,7 @@ class SimpleCache {
           this.CLIENT_STORAGE_KEY,
           JSON.stringify(this.cache)
         )
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   }
 

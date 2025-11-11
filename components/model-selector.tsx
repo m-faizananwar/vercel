@@ -62,7 +62,8 @@ export const AVAILABLE_MODELS: Model[] = [
     name: 'Gemini 2.5 Pro',
     provider: 'Google',
     contextLength: 1048576,
-    description: "Google's most advanced reasoning model with multimodal capabilities",
+    description:
+      "Google's most advanced reasoning model with multimodal capabilities",
     supportsVision: true
   },
   {

@@ -85,7 +85,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-medium;
+    @apply bg-background font-medium text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -94,7 +94,7 @@
 
 @layer components {
   .chat-bubble {
-    @apply rounded-2xl px-4 py-2.5 max-w-[80%] shadow-sm relative;
+    @apply relative max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm;
     transform: translateZ(0);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -105,20 +105,19 @@
   }
 
   .chat-bubble-assistant {
-    @apply bg-[hsl(var(--chat-bubble-assistant))] text-[hsl(var(--chat-bubble-assistant-foreground))] border border-border/50;
+    @apply border border-border/50 bg-[hsl(var(--chat-bubble-assistant))] text-[hsl(var(--chat-bubble-assistant-foreground))];
     box-shadow: 0 1px 2px hsl(var(--chat-bubble-shadow));
   }
 
   .premium-input {
-    @apply bg-background/80 backdrop-blur-sm border-border/50 rounded-2xl;
+    @apply rounded-2xl border-border/50 bg-background/80 backdrop-blur-sm;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 1px 3px hsl(var(--chat-bubble-shadow));
   }
 
   .premium-input:focus-within {
     @apply border-primary/50 shadow-lg;
-    box-shadow:
-      0 4px 12px hsl(var(--chat-bubble-shadow)),
+    box-shadow: 0 4px 12px hsl(var(--chat-bubble-shadow)),
       0 0 0 1px hsl(var(--primary) / 0.2);
   }
 

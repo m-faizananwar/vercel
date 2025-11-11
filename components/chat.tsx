@@ -76,8 +76,7 @@ export function Chat({
           if (!selectedTeamId && userTeams.length > 0) {
             setSelectedTeamId(userTeams[0].id)
           }
-        } catch (error) {
-        }
+        } catch (error) {}
       }
       setIsLoadingTeams(false)
       setIsMounted(true)
@@ -126,8 +125,7 @@ export function Chat({
           'Не удалось отправить сообщение. Пожалуйста, попробуйте еще раз.'
         )
       },
-      async onFinish(message) {
-      }
+      async onFinish(message) {}
     })
 
   useEffect(() => {
@@ -137,7 +135,9 @@ export function Chat({
         const c: any = (msg as any).content
         if (typeof c === 'string') return c.substring(0, 100)
         if (Array.isArray(c)) {
-          const textPart = c.find((p: any) => p?.type === 'text' && typeof p.text === 'string')
+          const textPart = c.find(
+            (p: any) => p?.type === 'text' && typeof p.text === 'string'
+          )
           if (textPart?.text) return textPart.text.substring(0, 100)
         }
         return 'New Chat'
@@ -173,7 +173,6 @@ export function Chat({
     if (navigationFiredRef.current) {
       return
     }
-
   }, [selectedTeamId, teamId, router, isMounted])
 
   if (!initialMessages && chatLoading) {

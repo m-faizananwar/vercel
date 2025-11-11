@@ -38,8 +38,7 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
           'cache-control': 'no-store'
         }
       })
-    } catch {
-    }
+    } catch {}
 
     try {
       const possibleKeys = [
@@ -122,9 +121,7 @@ export function UserMenu({ user, isSuperAdmin = false }: UserMenuProps) {
         >
           <DropdownMenuItem className="flex-col items-start rounded-xl p-3 hover:bg-muted/50 focus:bg-muted/50">
             <div className="text-sm font-semibold text-foreground">
-              {
-                displayName 
-              }
+              {displayName}
             </div>
             <div className="text-xs text-muted-foreground">{user?.email}</div>
           </DropdownMenuItem>

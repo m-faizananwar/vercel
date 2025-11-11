@@ -54,7 +54,7 @@ export function SidebarItem({ chat, children }: SidebarItemProps) {
       <button
         onClick={handleClick}
         className={cn(
-          'group flex w-full items-center rounded-2xl px-3 py-2.5 text-sm transition-all duration-200 text-left',
+          'group flex w-full items-center rounded-2xl px-3 py-2.5 text-left text-sm transition-all duration-200',
           'hover:scale-[1.01] hover:bg-muted/40 active:scale-[0.99]',
           isActive
             ? 'border border-primary/20 bg-primary/10 text-primary shadow-sm'

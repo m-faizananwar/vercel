@@ -18,7 +18,7 @@ export default function Orb({
 }: OrbProps) {
   const ctnDom = useRef<HTMLDivElement>(null)
 
-  const vert =  `
+  const vert = `
     precision highp float;
     attribute vec2 position;
     attribute vec2 uv;
@@ -29,7 +29,7 @@ export default function Orb({
     }
   `
 
-  const frag =  `
+  const frag = `
     precision highp float;
 
     uniform float iTime;
@@ -313,5 +313,5 @@ export default function Orb({
     }
   }, [hue, hoverIntensity, rotateOnHover, forceHoverState, frag, vert])
 
-  return <div ref={ctnDom} className="w-full h-full" />
+  return <div ref={ctnDom} className="h-full w-full" />
 }

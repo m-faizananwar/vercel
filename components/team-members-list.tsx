@@ -88,8 +88,8 @@ export function TeamMembersList({ team }: TeamMembersListProps) {
                 {member.role === 'admin'
                   ? 'Администратор'
                   : member.role === 'member'
-                    ? 'Участник'
-                    : member.role}
+                  ? 'Участник'
+                  : member.role}
               </Badge>
 
               {team.user_role === 'admin' && (

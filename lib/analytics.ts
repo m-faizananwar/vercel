@@ -50,8 +50,7 @@ export const initAnalytics = ({
         {
           await promise
         }
-      } catch (err) {
-      }
+      } catch (err) {}
     }
   }
 }

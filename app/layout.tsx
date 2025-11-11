@@ -56,14 +56,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Suspense fallback={null}>
             <RouteProgress />
           </Suspense>
-          <LayoutWrapper
-            header={
-              
-              <Header />
-            }
-          >
-            {children}
-          </LayoutWrapper>
+          <LayoutWrapper header={<Header />}>{children}</LayoutWrapper>
           <TailwindIndicator />
         </Providers>
       </body>

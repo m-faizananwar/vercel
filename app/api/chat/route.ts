@@ -8,25 +8,15 @@ import { nanoid } from '@/lib/utils'
 import { cache } from '@/lib/cache'
 
 export async function POST(req: Request) {
-  const STYLE_SYSTEM_PROMPT = `You are a professional AI assistant providing clear, accurate, and well-structured responses.
+  const currentDate = new Date().toISOString().slice(0, 10)
+  const STYLE_SYSTEM_PROMPT = `Вы — Assistant, большая языковая модель.
+Текущая дата: ${currentDate}
+Личность: v2
 
-Core Principles:
-- Prioritize user intent: Always follow the user's explicit instructions precisely
-- Communicate clearly: Use concise, professional language that is easy to understand
-- Structure responses: Format information logically with headings, bullet points, or numbered lists when appropriate
-- Be thorough yet efficient: Provide complete answers without unnecessary verbosity
+Отвечайте исключительно на русском языке. Вы — высококомпетентный, вдумчивый и точный помощник. Внимательно понимаете намерения пользователя, при необходимости задаёте уточняющие вопросы, рассуждаете шаг за шагом над сложными задачами, даёте ясные и корректные ответы и проактивно добавляете полезные детали и следующие шаги. Всегда будьте правдивы, нюансированы и эффективны, адаптируя стиль под запрос пользователя.
 
-Response Guidelines:
-- For document analysis: Provide a structured summary highlighting key entities, data points, and insights
-- For simple acknowledgments: Offer a brief, friendly response and proactively suggest next steps
-- For complex questions: Break down your answer into clear sections with actionable information
-- For multilingual content: Respond in the user's language while noting the original language when relevant
-
-Quality Standards:
-- Ensure responses are polished and professionally written
-- Use specific examples and concrete details when helpful
-- Avoid repetition unless explicitly requested
-- Ask clarifying questions only when necessary to provide accurate assistance`
+В конце каждого ответа добавляйте отдельной строкой:
+«Если что‑то осталось неясным — спрашивайте.»`
 
   const cookieStore = cookies()
   const supabase = createRouteHandlerClient<Database>({
@@ -255,31 +245,33 @@ Quality Standards:
         mime === 'application/pdf'
           ? 'pdf'
           : mime === 'text/plain'
-            ? 'txt'
-            : mime === 'text/markdown'
-              ? 'md'
-              : mime === 'application/json'
-                ? 'json'
-                : mime === 'text/csv'
-                  ? 'csv'
-                  : mime === 'application/msword'
-                    ? 'doc'
-                    : mime ===
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                      ? 'docx'
-                      : mime ===
-                          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                        ? 'xlsx'
-                        : mime ===
-                            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-                          ? 'pptx'
-                          : mime === 'application/vnd.ms-excel'
-                            ? 'xls'
-                            : mime === 'application/vnd.ms-powerpoint'
-                              ? 'ppt'
-                              : 'dat'
+          ? 'txt'
+          : mime === 'text/markdown'
+          ? 'md'
+          : mime === 'application/json'
+          ? 'json'
+          : mime === 'text/csv'
+          ? 'csv'
+          : mime === 'application/msword'
+          ? 'doc'
+          : mime ===
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          ? 'docx'
+          : mime ===
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          ? 'xlsx'
+          : mime ===
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+          ? 'pptx'
+          : mime === 'application/vnd.ms-excel'
+          ? 'xls'
+          : mime === 'application/vnd.ms-powerpoint'
+          ? 'ppt'
+          : 'dat'
       const buffer = Buffer.from(b64, 'base64')
-      const filename = `upload-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const filename = `upload-${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2)}.${ext}`
       const form = new FormData()
       form.append('purpose', 'assistants')
       form.append('file', new Blob([buffer], { type: mime }), filename)
@@ -307,31 +299,33 @@ Quality Standards:
             mime === 'application/pdf'
               ? 'pdf'
               : mime === 'text/plain'
-                ? 'txt'
-                : mime === 'text/markdown'
-                  ? 'md'
-                  : mime === 'application/json'
-                    ? 'json'
-                    : mime === 'text/csv'
-                      ? 'csv'
-                      : mime === 'application/msword'
-                        ? 'doc'
-                        : mime ===
-                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                          ? 'docx'
-                          : mime ===
-                              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                            ? 'xlsx'
-                            : mime ===
-                                'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-                              ? 'pptx'
-                              : mime === 'application/vnd.ms-excel'
-                                ? 'xls'
-                                : mime === 'application/vnd.ms-powerpoint'
-                                  ? 'ppt'
-                                  : 'dat'
+              ? 'txt'
+              : mime === 'text/markdown'
+              ? 'md'
+              : mime === 'application/json'
+              ? 'json'
+              : mime === 'text/csv'
+              ? 'csv'
+              : mime === 'application/msword'
+              ? 'doc'
+              : mime ===
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+              ? 'docx'
+              : mime ===
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+              ? 'xlsx'
+              : mime ===
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+              ? 'pptx'
+              : mime === 'application/vnd.ms-excel'
+              ? 'xls'
+              : mime === 'application/vnd.ms-powerpoint'
+              ? 'ppt'
+              : 'dat'
           const buffer = Buffer.from(b64, 'base64')
-          const filename = `upload-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+          const filename = `upload-${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2)}.${ext}`
           const form = new FormData()
           form.append('purpose', 'assistants')
           form.append('file', new Blob([buffer], { type: mime }), filename)
@@ -391,7 +385,9 @@ Quality Standards:
       const userPrompt =
         styleIntro +
         (historyText
-          ? `${historyText}\n\nUser: ${lastText || 'Please analyze the attached document(s).'}`
+          ? `${historyText}\n\nUser: ${
+              lastText || 'Please analyze the attached document(s).'
+            }`
           : lastText || 'Please analyze the attached document(s).')
 
       const responsesInput = [
@@ -580,7 +576,7 @@ Quality Standards:
             name: 'File Summarizer',
             instructions:
               STYLE_SYSTEM_PROMPT +
-              '\n\nYou summarize & analyze attached documents.',
+              '\n\nВы суммируете и анализируете прикреплённые документы.',
             model: model.replace('openai/', ''),
             tools: [{ type: 'file_search' }]
           })

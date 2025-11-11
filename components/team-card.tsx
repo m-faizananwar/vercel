@@ -29,8 +29,8 @@ export function TeamCard({ team }: TeamCardProps) {
             {team.user_role === 'admin'
               ? 'Администратор'
               : team.user_role === 'member'
-                ? 'Участник'
-                : team.user_role}
+              ? 'Участник'
+              : team.user_role}
           </Badge>
         </div>
         {team.description && (
