@@ -21,6 +21,13 @@ export interface Model {
 
 export const AVAILABLE_MODELS: Model[] = [
   {
+    id: 'deepseek/deepseek-r1',
+    name: 'DeepSeek R1 (Reasoner)',
+    provider: 'DeepSeek',
+    contextLength: 32768,
+    description: '671B MoE reasoning model (≈36B active). Text-only.'
+  },
+  {
     id: 'openai/gpt-4o',
     name: 'GPT-4o',
     provider: 'OpenAI',
@@ -80,13 +87,7 @@ export const AVAILABLE_MODELS: Model[] = [
     contextLength: 128000,
     description: "Mistral's flagship model"
   },
-  {
-    id: 'deepseek/deepseek-chat',
-    name: 'DeepSeek Chat',
-    provider: 'DeepSeek',
-    contextLength: 32768,
-    description: "DeepSeek's conversational model with strong reasoning"
-  }
+  
 ]
 
 interface ModelSelectorProps {
