@@ -418,7 +418,8 @@ const STYLE_SYSTEM_PROMPT = `Вы — Assistant, большая языковая
         method: 'POST',
         headers: {
           Authorization: `Bearer ${openAIApiKey}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'OpenAI-Beta': 'assistants=v2'
         },
         body: JSON.stringify(bodyPayload)
       })

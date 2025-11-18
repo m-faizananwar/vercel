@@ -79,6 +79,13 @@ export const AVAILABLE_MODELS: Model[] = [
     provider: 'Mistral AI',
     contextLength: 128000,
     description: "Mistral's flagship model"
+  },
+  {
+    id: 'deepseek/deepseek-chat',
+    name: 'DeepSeek Chat',
+    provider: 'DeepSeek',
+    contextLength: 32768,
+    description: "DeepSeek's conversational model with strong reasoning"
   }
 ]
 
