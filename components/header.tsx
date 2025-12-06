@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { authFast, auth } from '@/auth'
 
 import { Button, buttonVariants } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Sidebar } from '@/components/sidebar'
 import { SidebarTeams } from '@/components/sidebar-teams'
 import {
@@ -36,29 +37,44 @@ export async function Header() {
     <header className="fixed inset-x-0 top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b border-border/50 bg-background/80 px-6 shadow-md backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
       <div className="flex items-center">
         {session?.user ? (
-          <Sidebar
-            session={session}
-            footer={
-              <SidebarFooter>
-                <div className="flex items-center space-x-2">
-                  <ThemeToggle />
+          <>
+            <Sidebar
+              session={session}
+              footer={
+                <SidebarFooter>
+                  <div className="flex w-full items-center justify-between">
+                    <ThemeToggle />
+                    <span className="text-xs text-muted-foreground/50">
+                      Local AI V3
+                    </span>
+                  </div>
+                </SidebarFooter>
+              }
+            >
+              <div className="flex-1 overflow-auto">
+                { }
+                <div className="px-4 py-3">
+                  <h3 className="mb-2 text-sm font-medium text-foreground/80">
+                    Чаты команды
+                  </h3>
+                  <SidebarTeams
+                    session={session}
+                    isSuperAdmin={isUserSuperAdmin}
+                  />
                 </div>
-              </SidebarFooter>
-            }
-          >
-            <div className="flex-1 overflow-auto">
-              {}
-              <div className="px-4 py-3">
-                <h3 className="mb-2 text-sm font-medium text-foreground/80">
-                  Чаты команды
-                </h3>
-                <SidebarTeams
-                  session={session}
-                  isSuperAdmin={isUserSuperAdmin}
-                />
               </div>
-            </div>
-          </Sidebar>
+            </Sidebar>
+            <Badge
+              variant="outline"
+              className="ml-3 gap-1.5 border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary/80 transition-colors hover:bg-primary/10"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+              </span>
+              Local AI V3
+            </Badge>
+          </>
         ) : (
           <Link href="/" target="_blank" rel="nofollow">
             <IconNextChat className="mr-2 h-6 w-6 dark:hidden" inverted />
